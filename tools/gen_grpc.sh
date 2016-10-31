@@ -4,6 +4,9 @@
 # Revision 1.0
 # Data 2016/10/24
 # Des Install GRPC
+# author: pairs
+# email:736418319@qq.com
+# env: centos 7.2
 #-------------------------------------
 
 script=$(readlink -f "$0")
@@ -14,13 +17,13 @@ HAS_CHECKINSTALL=`which checkinstall >/dev/null 2>&1 && echo true || echo false`
 UBUNTU_FLAG=`cat /etc/issue | grep -i ubuntu >/dev/null 2>&1 && echo true || echo false`
 CENTOS_FLAG=`cat /etc/issue | grep -i centos >/dev/null 2>&1 && echo true || echo false`
 
-if [ "$HAS_CHECKINSTALL"x = "false"x ]; then 
+if [ "$HAS_CHECKINSTALL"x = "false"x ]; then
 echo "--please install checkinstall first"
 echo "-- down src : git clone http://checkinstall.izto.org/checkinstall.git"
 exit -1;
 fi
 
-# init autoconf 
+# init autoconf
 if [ "$UBUNTU_FLAG"X = "true"X ]; then
 echo "-- this is ubuntu system"
 echo "--begin install autoconf"
@@ -58,7 +61,7 @@ yum install -y gcc rpm-build pcre-devel rpmdevtools
 checkinstall -R --install=no --fstrans=no --default --pkgname=grpc --pkgversion=1.0.0 --pakdir=$route || exit 2
 fi
 
-# init protobuf 
+# init protobuf
 
 cd third_party/protobuf
 autoreconf -f -i -Wall,no-obsolete
