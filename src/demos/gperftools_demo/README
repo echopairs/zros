@@ -1,0 +1,21 @@
+# this is demo to tell you  how to use BaseServiceProcee class which processing signal in multithreaded
+
+1. how to use in code
+NOTES: the  only  things we should do is create instance of BaseServiceProcess at begin of main function, then call the member function installSigignalHandle();
+e.g:
+	BaseServiceProcee test;
+	test.installSigignalHandle();
+
+2. get properties file
+sudo kill -60 `pgrep signal_example`
+sleep 10
+sudo kill -61 `pgrep signal_example`
+file: /tmp/nros.profile
+
+3. transport *.profile to pdf or png
+pprof --pdf signal_example /tmp/nros.profile >>nros.pdf
+
+4. kill signal_example
+sudo kill -9 `pgrep signal_example`
+
+# good luck
