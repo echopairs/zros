@@ -2,7 +2,7 @@
 #define __SIGLETON_H__
 /*********************************************************************
   Copyright (C), 1990-2016, HangZhou RED HEAT Tech. Co., Ltd.
-  FileName: sig.cc
+  FileName: singleton.h
   Author  : pairs & 736418319@qq.com
   Version : 1.0
   Date    : 3/11/16
