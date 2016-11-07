@@ -1,0 +1,43 @@
+syntax = "proto3";
+package nsky_rpc;
+
+service MasterRPC {
+  rpc RegisterServer(ServerInfo) returns (Status){}
+  rpc UnregisterServer(ServerInfo) returns (Status) {}
+  rpc RegisterClient(ClientInfo) returns (Status) {}
+  rpc UnregisterClient(ClientInfo) returns (Status) {}
+  rpc Ping(PingRequest) returns(Status) {}
+}
+
+service PhysicalNodeRPC {
+  rpc RegisterServer(ServerInfo) returns (Status) {}
+  rpc UnregisterServer(ServerInfo) returns (Status) {}
+  rpc SendMessage(Message) returns (Status) {}
+  rpc Ping(PingRequest) returns (Status) {}
+}
+
+
+message PhysicalNodeInfo {
+  string name = 1;
+  string address = 2;
+}
+
+message ServerInfo {
+  string service_name = 1;
+  PhysicalNodeInfo physical_node_info = 2;
+}
+
+message ClientInfo {
+  string service_name = 1;
+  PhysicalNodeInfo physical_node_info = 2;
+}
+
+message Message {
+  string topic = 1;
+  bytes content = 2;
+  ClientInfo client_node_info;
+}
+
+message PingRequest {
+  string origin = 1;
+}
