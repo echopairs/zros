@@ -1,5 +1,3 @@
-#ifndef __SIGLETON_H__
-#define __SIGLETON_H__
 /*********************************************************************
   Copyright (C), 1990-2016, HangZhou RED HEAT Tech. Co., Ltd.
   FileName: singleton.h
@@ -17,6 +15,9 @@
       <author>    <time>    <version>    <desc>
         pairs     16/11/03      1.0     build this moudle
 *********************************************************************/
+#ifndef __SIGLETON_H__
+#define __SIGLETON_H__
+
 #include <memory>
 #include <mutex>
 template <typename T>
@@ -24,7 +25,7 @@ class SingleTon
 {
 public:
   template<typename... Args>
-  static std::shared_ptr<T> instance(Args&&... args)
+  static std::shared_ptr<T> Instance(Args&&... args)
   {
     if (pInstance_ == nullptr)
     {

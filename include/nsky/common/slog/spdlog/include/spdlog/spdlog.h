@@ -165,13 +165,6 @@ void drop_all();
 #define SPDLOG_TRACE(logger, ...)
 #endif
 
-#ifdef SPDLOG_DEBUG_ON
-#define SPDLOG_DEBUG(logger, ...) logger->debug(__VA_ARGS__)
-#else
-#define SPDLOG_DEBUG(logger, ...)
-#endif
-
-
 }
 
 
