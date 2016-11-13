@@ -16,6 +16,14 @@ service PhysicalNodeRPC {
   rpc Ping(PingRequest) returns (Status) {}
 }
 
+message Status {
+    enum Code {
+      OK = 0;
+      ALREAT_EXISTS = 1;
+    }
+    Code code = 1;
+    string details = 2;
+}
 
 message PhysicalNodeInfo {
   string name = 1;
@@ -35,7 +43,7 @@ message ClientInfo {
 message Message {
   string topic = 1;
   bytes content = 2;
-  ClientInfo client_node_info;
+  PhysicalNodeInfo Physical_node_info;
 }
 
 message PingRequest {
