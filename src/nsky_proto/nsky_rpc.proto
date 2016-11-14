@@ -43,7 +43,7 @@ message ClientInfo {
 message Message {
   string topic = 1;
   bytes content = 2;
-  PhysicalNodeInfo Physical_node_info;
+  PhysicalNodeInfo Physical_node_info = 3;
 }
 
 message PingRequest {
