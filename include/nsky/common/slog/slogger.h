@@ -16,7 +16,7 @@
 #ifndef __SLOGGER_H__
 #define __SLOGGER_H__
 
-#include "spdlog/spdlog.h"
+#include <spdlog/spdlog.h>
 #include <memory>
 #include <string>
 

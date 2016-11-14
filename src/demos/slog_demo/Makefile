@@ -1,5 +1,5 @@
 CXXFLAGS += -I../../../include
-CXXFLAGS += -I/home/pairs/share/project/nsky/include/nsky/common/slog/spdlog/include
+CXXFLAGS += -I/usr/local/include
 CXX = g++
 CPPFLAGS += -std=c++11
 LDFLAGS += -pthread
