@@ -1,4 +1,4 @@
-#include "master.h"
+#include "nsky_master.h"
 
 
 namespace nsky {

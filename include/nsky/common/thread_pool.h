@@ -15,8 +15,8 @@
       <author>    <time>    <version>    <desc>
         pairs     16/11/03      1.0     build this moudle
 *********************************************************************/
-#ifndef __THREAD_H__
-#define __THREAD_H__
+#ifndef __THREAD_POOL_H__
+#define __THREAD_POOL_H__
 
 #include <vector>
 #include <queue>
