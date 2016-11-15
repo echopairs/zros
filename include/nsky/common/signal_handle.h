@@ -23,9 +23,9 @@
 
 #include <iostream>
 #include <signal.h>
-#include <google/heap-checker.h>
-#include <google/heap-profiler.h> // for heap with HeapProfilerStart,HeapProfileStop,HeapProfileDump
-#include <google/profiler.h>      // for cpu with ProfileStart,ProfileStop,ProfilerFlush
+#include <gperftools/heap-checker.h>
+#include <gperftools/heap-profiler.h> // for heap with HeapProfilerStart,HeapProfileStop,HeapProfileDump
+#include <gperftools/profiler.h>      // for cpu with ProfileStart,ProfileStop,ProfilerFlush
 #include <thread>                 // c11 for multi-thread
 
 
