@@ -3,3 +3,4 @@
 
 #显示要忽略的目录
 external_libs/
+build/
