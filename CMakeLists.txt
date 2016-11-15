@@ -7,6 +7,7 @@ if(UNIX)
   set(PROTOBUF_PROTOC_EXECUTABLE /usr/local/bin/protoc)
   set(GRPC_CPP_PLUGIN_EXECUTABLE /usr/local/bin/grpc_cpp_plugin)
   set(GRPC_LIBRARIES libgrpc++.a libgrpc.a)
+  link_libraries(libtcmalloc.a libprofiler.a)
   # TODO
 elseif(WIN32)
 # TODO
@@ -33,6 +34,7 @@ set(NSKY_HEAD
 )
 set(NSKY_SRC
   ${nsky_SOURCE_DIR}/src/nsky_cpp/nsky.cc
+  #${nsky_SOURCE_DIR}/src/nsky_cpp/signal_handle.cc
 )
 
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${NSKY_GRPC_PROTO})
@@ -75,8 +77,12 @@ endif(UNIX)
 
 
 # nsky_master
-set (NSKY_MATER_SRC
-  // TODO
+set (NSKY_MASTER_SRC
+    ${nsky_SOURCE_DIR}/src/nsky_master/main.cc
+    ${nsky_SOURCE}/src/nsky_master/nsky_master.cc
+    ${nsky_SOURCE}/src/nsky_master/node_mgr.cc
+    ${nsky_SOURCE}/src/nsky_master/service_mgr.cc
+    ${nsky_SOURCE}/src/nsky_master/signal_handle.cc
   )
 #add_library(nsky_master ${NSKY_MASTER_SRC})
 #target_link_libraries(nsky_master nsky)
