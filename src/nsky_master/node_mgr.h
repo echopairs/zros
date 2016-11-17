@@ -35,10 +35,12 @@ public:
   ~NodeManger();
   void AddNode(const std::string &addr);
   void RemoveNode(const std::string &addr);
+  std::shared_ptr<std::tuple<std::chrono::system_clock::time_point, std::shared_ptr<grpc::Channel>, std::shared_ptr<nsky_rpc::PhysicalNodeRPC::Stub> > > \
+  GetNode(const std::string &addr);
 
   std::shared_ptr<nsky_rpc::PhysicalNodeRPC::Stub> GetNodeStub(std::string &addr);
   std::shared_ptr<grpc::Channel> GetNodeChannel(std::string &addr);
-  int GetNodeLastModifyTime(std::string &addr);
+  std::chrono::system_clock::time_point GetNodeLastModifyTime(std::string &addr);
   void RemoveAllNode();
   void HealthCheck();
 
