@@ -16,6 +16,7 @@
 #define __NSKY_SERVICE_MGR_H__
 #include <map>
 #include <list>
+#include <mutex>
 #include <nsky_rpc.grpc.pb.h>
 
 namespace nsky {
@@ -31,7 +32,10 @@ public:
   void RemoveClient(const nsky_rpc::ClientInfo &);
 
   bool IsHasClient(const nsky_rpc::ClientInfo&);
-  bool IsHasService(const nsky_rpc::ServerInfo);
+  bool IsHasService(const nsky_rpc::ServerInfo&);
+
+  void RemoveAllService();
+  void RemoveAllClient();
 
 private:
     // <topic,<ip,phsicalNode> >
