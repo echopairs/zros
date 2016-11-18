@@ -2,11 +2,6 @@
 #include <chrono>
 #include <ratio>
 
-// private:
-//   // <ip,<last Modify time, channel, stub >>
-//   std::mutex mtx_;
-//   std::map<std::string, std::shared_ptr<tuple<int, std::shared_ptr<grpc::Channel>, std::shared_ptr<nsky::PhysicalNodeRPC::Stub>> > > nodes_;
-// };
 
 namespace nsky {
 
