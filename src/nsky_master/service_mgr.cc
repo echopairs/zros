@@ -14,25 +14,40 @@ namespace nsky
     }
     std::list<nsky_rpc::ClientInfo> ServiceManager::AddService(const nsky_rpc::ServerInfo &sinfo)
     {
-      // TODO
+        std::list<nsky_rpc::ClientInfo> ts;
+        std::unique_lock<std::mutex> slk(smtx_);
+        std::unique_lock<std::mutex> clk(smtx_);
+        // add to services_ map
+        // TODO
+
     }
 
     std::list<nsky_rpc::ServerInfo> ServiceManager::AddClient(const nsky_rpc::ClientInfo &cinfo)
     {
-      // TODO
+        std::unique_lock<std::mutex> slk(smtx_);
+        std::unique_lock<std::mutex> clk(smtx_);
+        // TODO
     }
 
     void ServiceManager::RemoveService(const nsky_rpc::ServerInfo &sinfo)
     {
-        std::unique_lock<std::mutex> lk(smtx_);
-
+        if (IsHasService(sinfo))
+        {
+            // true
+            std::unique_lock<std::mutex> lk(smtx_);
+            auto smap = services_.find(sinfo.service_name());
+            smap->second.erase(sinfo.physical_node_info().address());
+        }
     }
 
     void ServiceManager::RemoveClient(const nsky_rpc::ClientInfo &cinfo)
     {
         if (IsHasClient(cinfo))
         {
-            // TODO
+            // true
+            std::unique_lock<std::mutex> lk(cmtx_);
+            auto cmap = clients_.find(cinfo.service_name());
+            cmap->second.erase(cinfo.physical_node_info().address());
         }
     }
     bool ServiceManager::IsHasClient(const nsky_rpc::ClientInfo &cinfo)
