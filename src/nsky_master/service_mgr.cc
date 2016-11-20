@@ -1,4 +1,5 @@
 #include "service_mgr.h"
+#include <algorithm>
 
 namespace nsky
 {
@@ -14,19 +15,67 @@ namespace nsky
     }
     std::list<nsky_rpc::ClientInfo> ServiceManager::AddService(const nsky_rpc::ServerInfo &sinfo)
     {
-        std::list<nsky_rpc::ClientInfo> ts;
+        std::list<nsky_rpc::ClientInfo> clts;
         std::unique_lock<std::mutex> slk(smtx_);
-        std::unique_lock<std::mutex> clk(smtx_);
-        // add to services_ map
-        // TODO
+        std::unique_lock<std::mutex> clk(cmtx_);
+        auto smap = services_.find(sinfo.service_name());
 
+        // add to services_
+        if (smap != services_.end())
+        {
+            smap->second[sinfo.physical_node_info().address()] = sinfo;
+        }
+        else
+        {
+            // no this topic
+            std::map<std::string,nsky_rpc::ServerInfo> maps;
+            maps[sinfo.physical_node_info().address()] = sinfo;
+            services_[sinfo.service_name()] = maps;
+        }
+
+        // get client from clients_
+        auto clients = clients_.find(sinfo.service_name());
+        if (clients != clients_.end())
+        {
+            std::transform(clients->second.begin(), clients->second.end(), back_inserter(clts),\
+              [](std::map<std::string, nsky_rpc::ClientInfo>::value_type & value) {
+                  return value.second;
+              });
+        }
+        return clts;
     }
 
     std::list<nsky_rpc::ServerInfo> ServiceManager::AddClient(const nsky_rpc::ClientInfo &cinfo)
     {
         std::unique_lock<std::mutex> slk(smtx_);
-        std::unique_lock<std::mutex> clk(smtx_);
-        // TODO
+        std::unique_lock<std::mutex> clk(cmtx_);
+        std::list<nsky_rpc::ServerInfo> slts;
+
+        auto cmap = clients_.find(cinfo.service_name());
+
+        // add to clients_
+        if (cmap != clients_.end())
+        {
+            cmap->second[cinfo.physical_node_info().address()] = cinfo;
+        }
+        else
+        {
+            // no this topic
+            std::map<std::string,nsky_rpc::ClientInfo> maps;
+            maps[cinfo.physical_node_info().address()] = cinfo;
+            clients_[cinfo.service_name()] = maps;
+        }
+
+        // get client from clients_
+        auto services = services_.find(cinfo.service_name());
+        if (services != services_.end())
+        {
+            std::transform(services->second.begin(), services->second.end(), back_inserter(slts),\
+              [](std::map<std::string, nsky_rpc::ServerInfo>::value_type & value) {
+                  return value.second;
+              });
+        }
+        return slts;
     }
 
     void ServiceManager::RemoveService(const nsky_rpc::ServerInfo &sinfo)
