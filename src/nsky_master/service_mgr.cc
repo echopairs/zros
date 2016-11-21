@@ -66,7 +66,7 @@ namespace nsky
             clients_[cinfo.service_name()] = maps;
         }
 
-        // get client from clients_
+        // get service from services_
         auto services = services_.find(cinfo.service_name());
         if (services != services_.end())
         {
