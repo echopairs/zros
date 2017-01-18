@@ -7,9 +7,6 @@
   Description:
       thread_pool
       e.g: just call enqueue(function); // function is task want to do
-      class test{xxx};
-      std::shared_ptr<test> a = SingleTon<SingleTest>::instance(1,2);
-      a.someMeth(xxx);
   Function List:
   History:
       <author>    <time>    <version>    <desc>
