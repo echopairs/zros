@@ -7,7 +7,7 @@ if(UNIX)
   set(PROTOBUF_PROTOC_EXECUTABLE /usr/local/bin/protoc)
   set(GRPC_CPP_PLUGIN_EXECUTABLE /usr/local/bin/grpc_cpp_plugin)
   set(GRPC_LIBRARIES libgrpc++.a libgrpc.a)
-  link_libraries(libtcmalloc.a libprofiler.a pthread)
+  link_libraries(tcmalloc.a profiler.a -lpthread -lz -lssl -lcrypto)
   # TODO
 elseif(WIN32)
 # TODO
@@ -27,9 +27,8 @@ find_Package(Protobuf REQUIRED)
 
 # which need package to nsky lib for other use
 set(NSKY_HEAD
- 	${nsky_SOURCE_DIR}/include/nsky/common/signal_handle.h
-	${nsky_SOURCE_DIR}/include/nsky/common/singleton.h
-	${nsky_SOURCE_DIR}/include/nsky/common/slog.h
+ 	${nsky_SOURCE_DIR}/include/nsky/signal_handle.h
+	${nsky_SOURCE_DIR}/include/nsky/singleton.h
 	${nsky_SOURCE_DIR}/include/nsky/common/thread_pool.h
 )
 set(NSKY_SRC

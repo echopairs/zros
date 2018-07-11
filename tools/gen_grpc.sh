@@ -37,12 +37,12 @@ echo "-- not supports system except centos and ubuntu"
 fi
 fi
 
-:<<!
+
 # get source code if dir exsits just remove it.(the code may be incomplete)
 [ -d "$route/grpc" ] && rm -rf grpc
 
 git clone -b $(curl -L http://grpc.io/release) https://github.com/grpc/grpc
-!
+
 # update submodule
 cd grpc
 git submodule update --init

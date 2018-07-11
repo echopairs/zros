@@ -2,7 +2,7 @@
 // Created by zsy on 9/29/16.
 //
 
-#include <nsky/common/signal_handle.h>
+#include <nsky/signal_handle.h>
 using namespace std;
 
 BaseServiceProcess::BaseServiceProcess()//:signalRunning_(false)

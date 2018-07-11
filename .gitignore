@@ -1,6 +1,9 @@
 #忽略后缀名为.o和.a的文件
 *.[oa]
 
+*.pyc
+
 #显示要忽略的目录
 external_libs/
 build/
+.idea/
