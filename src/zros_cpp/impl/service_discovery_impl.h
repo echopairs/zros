@@ -17,6 +17,9 @@ using grpc::Status;
 
 namespace zros {
 
+    using DealRegisterServiceServerCb = std::function<void(const zros_rpc::ServiceServerInfo *serverInfo, zros_rpc::Status *status)>;
+    using DealRegisterSubscriberCb = std::function<void(const zros_rpc::SubscriberInfo *subInfo, zros_rpc::Status *status)>;
+
     class ServiceDiscoveryImpl : public zros_rpc::ServiceDiscoveryRPC::Service {
     public:
         ServiceDiscoveryImpl(const std::string & masterAddress, const std::string & agentAddress);
@@ -40,7 +43,28 @@ namespace zros {
 
         ~ServiceDiscoveryImpl();
 
+        void set_register_service_server_cb(DealRegisterServiceServerCb cb) {
+            deal_register_service_server_cb_ = cb;
+        }
+
+        void set_unregister_service_server_cb(DealRegisterServiceServerCb cb) {
+            deal_unregister_service_server_cb_ = cb;
+        }
+
+        void set_register_subscriber_cb(DealRegisterSubscriberCb cb) {
+            deal_register_subscriber_cb_ = cb;
+        }
+
+        void set_unregister_subscriber_cb(DealRegisterSubscriberCb cb) {
+            deal_unregister_subscriber_cb_ = cb;
+        }
+
     private:
+        DealRegisterServiceServerCb deal_register_service_server_cb_;
+        DealRegisterServiceServerCb deal_unregister_service_server_cb_;
+        DealRegisterSubscriberCb deal_register_subscriber_cb_;
+        DealRegisterSubscriberCb deal_unregister_subscriber_cb_;
+
         std::unique_ptr<zros_rpc::MasterRPC::Stub> master_rpc_stub_;
         std::unique_ptr<grpc::Server> grpc_server_;
         std::string master_address_;
