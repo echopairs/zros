@@ -36,4 +36,20 @@ namespace zros {
         // todo
         return impl_->addServiceClient(client);
     }
+
+    void ServiceDiscovery::set_register_service_server_cb(DealRegisterServiceServerCb cb) {
+        impl_->set_register_service_server_cb(cb);
+    }
+
+    void ServiceDiscovery::set_unregister_service_server_cb(DealRegisterServiceServerCb cb) {
+        impl_->set_unregister_service_server_cb(cb);
+    }
+
+    void ServiceDiscovery::set_register_subscriber_cb(DealRegisterSubscriberCb cb) {
+        impl_->set_register_subscriber_cb(cb);
+    }
+
+    void ServiceDiscovery::set_unregister_subscriber_cb(DealRegisterSubscriberCb cb) {
+        impl_->set_unregister_subscriber_cb(cb);
+    }
 }

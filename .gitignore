@@ -7,3 +7,4 @@
 external_libs/
 build/
 .idea/
+bin/

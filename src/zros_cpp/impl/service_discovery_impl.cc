@@ -11,29 +11,34 @@ namespace zros {
     ServiceDiscoveryImpl::RegisterServiceServer(grpc::ServerContext *context,
                                                              const zros_rpc::ServiceServerInfo *request,
                                                 zros_rpc::Status *response) {
+        deal_register_service_server_cb_(request, response);
+        return grpc::Status::OK;
     }
 
     grpc::Status
     ServiceDiscoveryImpl::RegisterSubscriber(grpc::ServerContext *context, const zros_rpc::SubscriberInfo *request,
                                              zros_rpc::Status *response) {
-        return Service::RegisterSubscriber(context, request, response);
+        deal_register_subscriber_cb_(request, response);
+        return grpc::Status::OK;
     }
 
     grpc::Status
     ServiceDiscoveryImpl::UnregisterSubscriber(grpc::ServerContext *context, const zros_rpc::SubscriberInfo *request,
                                                zros_rpc::Status *response) {
-        return Service::UnregisterSubscriber(context, request, response);
+        deal_unregister_subscriber_cb_(request, response);
+        return grpc::Status::OK;
     }
 
     grpc::Status
     ServiceDiscoveryImpl::UnregisterServiceServer(grpc::ServerContext *context, const zros_rpc::ServiceServerInfo *request,
                                                   zros_rpc::Status *response) {
-        return Service::UnregisterServiceServer(context, request, response);
+        deal_unregister_service_server_cb_(request, response);
+        return grpc::Status::OK;
     }
 
     grpc::Status
     ServiceDiscoveryImpl::Ping(grpc::ServerContext *context, const zros_rpc::PingRequest *request, zros_rpc::Status *response) {
-        return Service::Ping(context, request, response);
+        return grpc::Status::OK;
     }
 
     ServiceDiscoveryImpl::ServiceDiscoveryImpl(const std::string &master_address, const std::string &agent_address)
