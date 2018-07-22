@@ -1,0 +1,101 @@
+syntax = "proto3";
+package zros_rpc;
+
+service ServiceRPC {
+  rpc InvokeService(ServiceRequest) returns (ServiceResponse) {}
+}
+
+service ServiceDiscoveryRPC {
+    rpc RegisterSubscriber(SubscriberInfo) returns (Status) {}
+    rpc UnregisterSubscriber(SubscriberInfo) returns (Status) {}
+    rpc RegisterServiceServer(ServiceServerInfo) returns (Status) {}
+    rpc UnregisterServiceServer(ServiceServerInfo) returns (Status) {}
+    rpc Ping(PingRequest) returns (Status) {}
+}
+
+service MasterRPC {
+  rpc RegisterSubscriber(SubscriberInfo) returns (Status) {}
+  rpc UnregisterSubscriber(SubscriberInfo) returns (Status) {}
+  rpc RegisterPublisher(PublisherInfo) returns (Status) {}
+  rpc UnregisterPublisher(PublisherInfo) returns (Status) {}
+  rpc RegisterServiceServer(ServiceServerInfo) returns (Status) {}
+  rpc UnregisterServiceServer(ServiceServerInfo) returns (Status) {}
+  rpc RegisterServiceClient(ServiceClientInfo) returns (Status) {}
+  rpc UnregisterServiceClient(ServiceClientInfo) returns (Status) {}
+  rpc Ping(PingRequest) returns (Status) {}
+}
+
+message PingRequest {
+  string origin = 1;
+}
+
+message PhysicalNodeInfo {
+  string name = 1;
+  string agent_address = 2; // for listen
+  string real_address = 3;
+}
+
+message SubscriberInfo {
+  PhysicalNodeInfo physical_node_info = 1;
+  string topic = 2;
+}
+
+message PublisherInfo {
+  PhysicalNodeInfo physical_node_info = 1;
+  string topic = 2;
+}
+
+message ServiceServerInfo {
+  PhysicalNodeInfo physical_node_info = 1;
+  string service_name = 2;
+}
+
+message ServiceClientInfo {
+  PhysicalNodeInfo physical_node_info = 1;
+  string service_name = 2;
+}
+
+message PublisherNodeInfo {
+  string publisher_name = 1;
+  string logical_node_name = 2;
+  string physical_node_name = 3;
+  string address = 4;
+}
+
+message ClientNodeInfo {
+  string client_name = 1;
+  string logical_node_name = 2;
+  string physical_node_name = 3;
+  string address = 4;
+}
+
+message Status {
+  enum Code {
+    OK = 0;
+    UNKNOWN = 1;
+    INVALID_ARGUMENT = 2;
+    NOT_FOUND = 3;
+    FAILED_PRECONDITION = 4;
+    ALREADY_EXISTS = 5;
+  }
+  Code code = 1;
+  string details = 2;
+}
+
+message Message {
+  string topic = 1;
+  bytes content = 2;
+  PublisherNodeInfo pub_node_info = 3;
+}
+
+message ServiceRequest {
+  string service_name = 1;
+  bytes request_data = 2;
+  ClientNodeInfo cli_node_info = 3;
+}
+
+message ServiceResponse {
+  string service_name = 1;
+  bytes response_data = 2;
+  Status status = 3;
+}
