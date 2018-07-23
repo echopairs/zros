@@ -31,8 +31,8 @@ message PingRequest {
 
 message PhysicalNodeInfo {
   string name = 1;
-  string agent_address = 2; // for listen
-  string real_address = 3;
+  string agent_address = 2; // for master
+  string real_address = 3;  // for node
 }
 
 message SubscriberInfo {

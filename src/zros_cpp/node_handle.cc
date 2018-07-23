@@ -7,6 +7,7 @@
 #include "zros/service_server_manager.h"
 
 namespace zros {
+
     NodeHandle::NodeHandle(const std::string &node_address, const std::string &node_name):
             node_address_(node_address),node_name_(node_name) {
         thread_pool_ = std::make_shared<ThreadPool>(8);
@@ -29,6 +30,6 @@ namespace zros {
     std::shared_ptr<zros_rpc::ServiceResponse>
     NodeHandle::call(const std::string &service_name, const std::string &content, const std::string &cli_info,
                      int timeout_mseconds) {
-        return shared_ptr<zros_rpc::ServiceResponse>();
+        return service_client_mgr_->call(service_name, content, cli_info, timeout_mseconds);
     }
 }

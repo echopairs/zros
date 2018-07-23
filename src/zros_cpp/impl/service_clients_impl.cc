@@ -40,17 +40,25 @@ namespace zros {
         );
     }
 
-    bool ServiceClientsImpl::registerServiceClient(const std::string &service_name, const std::string &address) {
+    void ServiceClientsImpl::registerServiceClient(const zros_rpc::ServiceServerInfo *serverInfo, zros_rpc::Status *status) {
+        std::string service_name = serverInfo->service_name();
         std::lock_guard<std::mutex> lk1(clients_mutex_);
         if (clients_.find(service_name) == clients_.end()) {
             SSPD_LOG_WARNING << "please check registerServiceClient logical error " << service_name;
-            return false;
+            status->set_code(status->NOT_FOUND);
+            status->set_details(service_name + " client not register on");
+            return;
         }
         clients_[service_name]->set_ready(true);
         std::lock_guard<std::mutex> lk2(services_mutex_);
-        services_address_[service_name] = address;
-        SSPD_LOG_INFO << "register client : " << service_name << "on address: " << address << "success";
-        return true;
+        services_address_[service_name] = serverInfo->physical_node_info().real_address();
+        status->set_code(status->OK);
+        SSPD_LOG_INFO << "register client : " << service_name << "on address: " << serverInfo->physical_node_info().real_address() << "success";
+    }
+
+    void ServiceClientsImpl::unregisterServiceClient(const zros_rpc::ServiceServerInfo *serverInfo,
+                                                     zros_rpc::Status *status) {
+        // todo
     }
 
     bool ServiceClientsImpl::unregisterServiceClient(const std::string &service_name) {
@@ -73,7 +81,7 @@ namespace zros {
             SSPD_LOG_WARNING << "stub is nullptr ";
             auto tmp_res = std::make_shared<zros_rpc::ServiceResponse>();
             tmp_res->mutable_status()->set_code(zros_rpc::Status_Code_NOT_FOUND);
-            tmp_res->mutable_status()->set_details("Service call stub not found, probably waiting for establishing yet.");
+            tmp_res->mutable_status()->set_details("service call stub not found, probably waiting for establishing yet.");
             return tmp_res;
         }
         return stub->call(service_name, content, cli_info, timeout_mseconds);
@@ -103,4 +111,5 @@ namespace zros {
         }
         return stubs_[address];
     }
+
 }   // namespace zros
