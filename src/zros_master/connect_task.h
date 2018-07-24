@@ -11,45 +11,72 @@
       <author>    <time>    <version>    <desc>
         pairs     16/11/21      1.0     build this moudle
 *********************************************************************/
-#ifdef  __CONNECT_TASK__
-#define __CONNECT_TASK__
+#pragma once
 
-#include "nsky_rpc.grpc.pb.h"
 #include <mutex>
 #include <condition_variable>
 #include <thread>
+#include "zros.grpc.pb.h"
 
-namespace nsky
-{
-// may be take this as interface
-class CTask
-{
-public:
-  CTask()
-private:
-  enum taskType
-  {
-    connect;
-    disconnect;
-  }
-  taskType type_;
-  std::shared_ptr<nsky_rpc::ServerInfo>sinfo_;
-  std::shared_ptr<nsky_rpc::ClientInfo>cinfo_;
-  std::shared_ptr<NodeManger>node_manger_;
-  std::shared_ptr<ServiceManager>service_manager_;
-};
+namespace zros {
+    class NodeManager;
+    class ServiceManager;
 
-class TaskManager
-{
-public:
-  TaskManager(size_t nums);
-  ~TaskManager();
-private:
-  std::atomic<bool> stop_;
-  std::condition_variable cv_;
-  std::mutex mtx_;
-  std::vector<std::thread>wks_;
-};
+    class TaskStatus {
+    public:
+        enum TaskStatusFlag {
+            Error = 1 << 0,
+            OK    = 1 << 1
+        };
+
+        TaskStatus(const TaskStatusFlag& flag, const std::string& detail)
+                :flag_(flag), detail_(detail) {
+        }
+
+    protected:
+        TaskStatusFlag flag_;
+        std::string detail_;
+    };
+
+    // may be take this as interface
+    class IConnectTask {
+    public:
+        enum taskType {
+            connect,
+            disconnect
+        };
+
+        IConnectTask(const taskType& type):type_(type) {
+        }
+        virtual TaskStatus performTask() = 0;
+        void set_dead_time(std::chrono::steady_clock::time_point dead_time) {
+          dead_time_ = dead_time;
+        }
+    protected:
+        taskType type_;
+        std::chrono::steady_clock::time_point dead_time_ = std::chrono::steady_clock::now();
+    };
+
+    class ServiceConnectTask : public IConnectTask {
+    public:
+        ServiceConnectTask(const taskType& type,
+                           const zros_rpc::ServiceServerInfo& serverInfo,
+                           const zros_rpc::ServiceClientInfo& clientInfo,
+                           std::shared_ptr<NodeManager> nodeManager,
+                           std::shared_ptr<ServiceManager> serviceManager
+        );
+        TaskStatus performTask() override ;
+    private:
+        zros_rpc::ServiceServerInfo serverInfo_;
+        zros_rpc::ServiceClientInfo clientInfo_;
+        std::shared_ptr<NodeManager> nodeManager_;
+        std::shared_ptr<ServiceManager> serviceManager_;
+    };
+
+    class TaskManager {
+    public:
+    private:
+
+    };
 
 }  // end of namespace nsky
-#endif

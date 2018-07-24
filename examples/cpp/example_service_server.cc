@@ -28,11 +28,8 @@ int main() {
             service_name,
             [](const zros_example::TestServiceRequest * request, zros_example::TestServiceResponse * response) -> zros_rpc::Status {
                 response->set_detail("response of " + request->detail());
-                SSPD_LOG_INFO << "the request detail strlen is: " << strlen(request->detail().c_str());
+                SSPD_LOG_INFO << "the request detail is: " << strlen(request->detail().c_str());
                 return zros_rpc::Status();
             });
-    // 4. run  node && run service discovery
-    SSPD_LOG_INFO << "begin to run service server node";
-    node_handle->spin();
-    zros::spin();
+    getchar();
 }

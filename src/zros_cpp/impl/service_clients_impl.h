@@ -36,10 +36,11 @@ namespace zros {
     class ServiceClientsImpl {
     public:
         bool registerClient(const std::shared_ptr<IServiceClient> client);
-        bool registerServiceClient(const std::string & service_name, const std::string & address);
         bool unregisterServiceClient(const std::string & service_name);
         std::shared_ptr<zros_rpc::ServiceResponse> call(const std::string &service_name, const std::string & content,
                                                         const std::string &cli_info, int timeout_mseconds);
+        void registerServiceClient(const zros_rpc::ServiceServerInfo *serverInfo, zros_rpc::Status *status);
+        void unregisterServiceClient(const zros_rpc::ServiceServerInfo *serverInfo, zros_rpc::Status *status);
     private:
         std::shared_ptr<RpcStub> get_rpc_stub(const std::string & service_name);
 

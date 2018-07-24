@@ -34,4 +34,4 @@ namespace zros {
     private:
         std::shared_ptr<ServiceDiscoveryImpl> impl_;
     };
-}   // namespace nsky
+}   // namespace zros

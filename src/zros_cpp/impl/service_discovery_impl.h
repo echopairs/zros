@@ -69,5 +69,7 @@ namespace zros {
         std::unique_ptr<grpc::Server> grpc_server_;
         std::string master_address_;
         std::string agent_address_;
+
+        std::shared_ptr<std::thread> spin_thread_;
     };
 }

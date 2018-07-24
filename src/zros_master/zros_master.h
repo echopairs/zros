@@ -15,7 +15,7 @@
 			2. const ::zros_rpc::ServerInfo* request [IN]		// request data
 			3. zros_rpc::Status* response	[OUT]							// response data
 		......
-		3. RunServer // just listening in the port and accept request
+		3. runServer // just listening in the port and accept request
   History:
       <author>    <time>    <version>    <desc>
         pairs     16/11/12      1.0     build this moudle
@@ -28,9 +28,11 @@
 #include <string>
 #include <thread>
 #include <chrono>
-
+#include <zros/thread_pool.h>
 #include <grpc++/grpc++.h>
 #include "zros.grpc.pb.h"
+#include "service_manager.h"
+#include "node_manager.h"
 
 using grpc::Server;
 using grpc::ServerBuilder;
@@ -47,12 +49,22 @@ namespace zros {
 		grpc::Status RegisterServiceClient(::grpc::ServerContext* context, const ::zros_rpc::ServiceClientInfo* request, ::zros_rpc::Status* response) override;
 		grpc::Status UnregisterServiceClient(::grpc::ServerContext* context, const ::zros_rpc::ServiceClientInfo* request, ::zros_rpc::Status* response) override;
 		grpc::Status Ping(::grpc::ServerContext* context, const ::zros_rpc::PingRequest* request, ::zros_rpc::Status* response) override;
-		void RunServer();
-		~MasterServiceImpl();
+		void runServer();
+		virtual ~MasterServiceImpl();
 	private:
+        std::atomic<bool> health_check_;
+        std::shared_ptr<std::thread> health_check_thread_;
+        std::shared_ptr<std::thread> update_connect_thread_;
+
 		std::string server_address_;
 		grpc::ServerBuilder builder_;
 		std::unique_ptr<grpc::Server> server_;
+
+		std::shared_ptr<NodeManager> nodeManager_;
+		std::shared_ptr<ServiceManager> serviceManager_;
+
+		//
+		ThreadPool thread_pool_;
 	};
 }
 

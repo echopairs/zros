@@ -8,6 +8,7 @@
 #include <zros/service_server_interface.h>
 #include <grpc++/grpc++.h>
 #include <thread>
+#include <atomic>
 
 namespace zros {
 
@@ -32,6 +33,7 @@ namespace zros {
         grpc::Status InvokeService(grpc::ServerContext * context, const zros_rpc::ServiceRequest * request, zros_rpc::ServiceResponse * response) override;
         ~GrpcServersImpl();
     private:
+        std::atomic<bool> is_working_;
         std::shared_ptr<std::thread> work_thread_;
         std::unique_ptr<grpc::Server> grpc_server_;
     };

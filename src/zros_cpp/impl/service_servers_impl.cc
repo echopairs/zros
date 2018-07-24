@@ -13,6 +13,7 @@ namespace zros {
         if (servers_.find(server->get_service_name()) != servers_.end()) {
             SSPD_LOG_WARNING << server->get_service_name() << " already register";
         }
+        servers_[server->get_service_name()] = server;
         return true;
     }
 
@@ -29,14 +30,19 @@ namespace zros {
 
     //////////// GrpcServersImpl ///////////////////
     void GrpcServersImpl::start() {
-        work_thread_ = std::make_shared<std::thread> ([this](){
-            SSPD_LOG_INFO << "grpc server to work...";
-            grpc::ServerBuilder builder;
-            builder.AddListeningPort(service_address_, grpc::InsecureServerCredentials());
-            builder.RegisterService(this);
-            grpc_server_ = std::move(builder.BuildAndStart());
-            grpc_server_->Wait();
-        });
+        if (!is_working_) {
+            work_thread_ = std::make_shared<std::thread>([this]() {
+                SSPD_LOG_INFO << "grpc server to work...";
+                grpc::ServerBuilder builder;
+                builder.AddListeningPort(service_address_, grpc::InsecureServerCredentials());
+                builder.RegisterService(this);
+                grpc_server_ = std::move(builder.BuildAndStart());
+                grpc_server_->Wait();
+            });
+            is_working_ = true;
+        } else {
+            SSPD_LOG_WARNING << "grpc server already work...";
+        }
     }
 
     void GrpcServersImpl::stop() {
@@ -46,13 +52,15 @@ namespace zros {
         }
     }
 
-    GrpcServersImpl::GrpcServersImpl(const std::string &service_address):IServersImpl(service_address){
+    GrpcServersImpl::GrpcServersImpl(const std::string &service_address):
+            IServersImpl(service_address),
+            is_working_(false){
 
     }
 
     grpc::Status GrpcServersImpl::InvokeService(grpc::ServerContext *context, const zros_rpc::ServiceRequest *request,
                                                 zros_rpc::ServiceResponse *response) {
-        SSPD_LOG_INFO << "recv rpc call " ;
+        SSPD_LOG_INFO << "receive rpc call " << request->service_name();
         auto existing_server = servers_.find(request->service_name());
         if (existing_server == servers_.end()) {
             response->mutable_status()->set_code(zros_rpc::Status_Code_FAILED_PRECONDITION);

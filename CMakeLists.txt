@@ -100,9 +100,12 @@ set (ZROS_MASTER_SRC
     ${zros_SOURCE_DIR}/src/zros_master/zros_master.h
 	${zros_SOURCE_DIR}/src/zros_master/zros_master.cc
     ${zros_SOURCE_DIR}/src/zros_master/signal_handle.cc
-#    ${zros_SOURCE_DIR}/src/zros_master/node_mgr.h
-#    ${zros_SOURCE_DIR}/src/zros_master/service_mgr.cc
-#    ${zros_SOURCE_DIR}/src/zros_master/service_mgr.h
+    ${zros_SOURCE_DIR}/src/zros_master/node_manager.h
+	${zros_SOURCE_DIR}/src/zros_master/node_manager.cc
+    ${zros_SOURCE_DIR}/src/zros_master/service_manager.cc
+    ${zros_SOURCE_DIR}/src/zros_master/service_manager.h
+	${zros_SOURCE_DIR}/src/zros_master/connect_task.h
+	${zros_SOURCE_DIR}/src/zros_master/connect_task.cc
   )
 
 add_executable(zros_master ${ZROS_MASTER_SRC})

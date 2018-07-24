@@ -9,7 +9,7 @@ int main(int argc, char* argv[]) {
         zros::BaseServiceProcess base;
         auto address = argc > 1 ? argv[1] : "0.0.0.0:23333";
         zros::MasterServiceImpl master(address);
-        master.RunServer();
+        master.runServer();
     }
     catch (const std::exception &e) {
         SSPD_LOG_ERROR << "catch fatal exception: " << e.what();

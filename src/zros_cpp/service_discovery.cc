@@ -33,7 +33,6 @@ namespace zros {
     }
 
     bool ServiceDiscovery::addServiceClient(const std::shared_ptr<IServiceClient> client) {
-        // todo
         return impl_->addServiceClient(client);
     }
 
