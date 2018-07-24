@@ -1,6 +1,7 @@
 #include "node_manager.h"
 #include <chrono>
 #include <ratio>
+#include <sspdlog/sspdlog.h>
 
 
 namespace zros {
@@ -21,12 +22,13 @@ namespace zros {
           auto stub = zros_rpc::ServiceDiscoveryRPC::NewStub(channel);
           nodes_[address] = std::make_shared<std::tuple<std::chrono::system_clock::time_point, std::shared_ptr<grpc::Channel>,\
            std::shared_ptr<zros_rpc::ServiceDiscoveryRPC::Stub> > >(std::chrono::system_clock::now(),channel, move(stub));
+          SSPD_LOG_INFO << "add node " << address << " success";
       }
     }
 
-    void NodeManager::removeNode(const std::string &addr) {
+    void NodeManager::removeNode(const std::string& address) {
         std::unique_lock<std::mutex> lk(mtx_);
-        nodes_.erase(addr);
+        nodes_.erase(address);
     }
 
 

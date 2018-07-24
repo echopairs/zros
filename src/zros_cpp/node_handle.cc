@@ -13,6 +13,7 @@ namespace zros {
         thread_pool_ = std::make_shared<ThreadPool>(8);
         service_server_mgr_ = std::make_shared<ServiceServerManager>(node_address);
         service_client_mgr_ = std::make_shared<ServiceClientManager>();
+        spin();
     }
 
     void NodeHandle::spin() {

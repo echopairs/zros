@@ -7,6 +7,9 @@ namespace zros {
 	MasterServiceImpl::MasterServiceImpl(const std::string &address):
             server_address_(address),
             thread_pool_(4) {
+		nodeManager_ = std::make_shared<NodeManager>();
+		serviceManager_ = std::make_shared<ServiceManager>();
+
 	}
 
 	grpc::Status MasterServiceImpl::RegisterServiceServer(::grpc::ServerContext* context, const ::zros_rpc::ServiceServerInfo* serverInfo, ::zros_rpc::Status* status) {
@@ -31,8 +34,16 @@ namespace zros {
 	}
 
 	grpc::Status MasterServiceImpl::RegisterServiceClient(::grpc::ServerContext* context, const ::zros_rpc::ServiceClientInfo* clientInfo, ::zros_rpc::Status* status) {
-		// TODO
 		SSPD_LOG_INFO << "RegisterServiceClient";
+		nodeManager_->addNode(clientInfo->physical_node_info().agent_address());
+		auto server = serviceManager_->addClient(*clientInfo);
+		if (server.has_physical_node_info() && !server.physical_node_info().agent_address().empty()) {
+			auto task = std::make_shared<ServiceConnectTask>(ServiceConnectTask::taskType::connect,
+															 server, *clientInfo, nodeManager_, serviceManager_);
+			thread_pool_.enqueue([task, this](){
+				auto status = task->performTask();
+			});
+		}
         status->set_code(status->OK);
      	return grpc::Status::OK;
 	}
@@ -43,7 +54,6 @@ namespace zros {
 	}
 
 	grpc::Status MasterServiceImpl::Ping(::grpc::ServerContext* context, const ::zros_rpc::PingRequest* pingRequest, ::zros_rpc::Status* status) {
-		SSPD_LOG_INFO << "master ping";
         status->set_code(status->OK);
      	return grpc::Status::OK;
 	}

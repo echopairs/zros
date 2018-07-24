@@ -14,7 +14,7 @@ int main() {
     zros::init(master_address, agent_address);
 
     // 2. create node
-    const std::string node_address = "localhost:50001";
+    const std::string node_address = "localhost:50002";
     const std::string node_name = "example_service_client";
     auto node_handle = std::make_shared<zros::NodeHandle>(node_address, node_name);
 
@@ -24,22 +24,22 @@ int main() {
             service_name
             );
 
-    // 4. run node and run service discovery
-    node_handle->spin();
     std::thread call_thread = std::thread([client]() {
         while (true) {
             zros_example::TestServiceRequest request;
             zros_example::TestServiceResponse response;
-            auto status = client->call(&request, &response);
-            if (status.code() == status.OK) {
-                SSPD_LOG_INFO << "call success";
-//                SSPD_LOG_INFO << "the response is " << response;
-            } else {
-                SSPD_LOG_WARNING << "call failed " << status.details();
+            while(client->get_ready()) {
+                auto status = client->call(&request, &response);
+                if (status.code() == status.OK) {
+                    SSPD_LOG_INFO << "call success";
+//                    SSPD_LOG_INFO << "the response is " << response;
+                } else {
+                    SSPD_LOG_WARNING << "call failed " << status.details();
+                }
+                std::this_thread::sleep_for(std::chrono::seconds(1));
             }
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
     });
-    call_thread.detach();
-    zros::spin();
+    call_thread.join();
 }

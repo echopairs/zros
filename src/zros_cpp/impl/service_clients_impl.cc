@@ -53,7 +53,7 @@ namespace zros {
         std::lock_guard<std::mutex> lk2(services_mutex_);
         services_address_[service_name] = serverInfo->physical_node_info().real_address();
         status->set_code(status->OK);
-        SSPD_LOG_INFO << "register client : " << service_name << "on address: " << serverInfo->physical_node_info().real_address() << "success";
+        SSPD_LOG_INFO << "register client : " << service_name << " on address: " << serverInfo->physical_node_info().real_address() << " success";
     }
 
     void ServiceClientsImpl::unregisterServiceClient(const zros_rpc::ServiceServerInfo *serverInfo,
@@ -70,7 +70,7 @@ namespace zros {
     ServiceClientsImpl::call(const std::string &service_name, const std::string &content, const std::string &cli_info,
                              int timeout_mseconds) {
         std::lock_guard<std::mutex> lk (clients_mutex_);
-        if (clients_.find(service_name) != clients_.end()) {
+        if (clients_.find(service_name) == clients_.end()) {
             SSPD_LOG_ERROR << "please check  if register this client ";
             return nullptr;
         }
@@ -93,6 +93,7 @@ namespace zros {
             SSPD_LOG_WARNING << client->get_service_name() << " already register";
             return false;
         }
+        clients_[client->get_service_name()] = client;
         return true;
     }
 

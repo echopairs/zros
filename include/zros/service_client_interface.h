@@ -30,6 +30,7 @@ namespace zros {
 
         std::shared_ptr<zros_rpc::ServiceResponse> call_(const std::string &content, const std::string &cli_info, int timeout);
         void set_ready(bool ready) { is_ready_ = ready; }
+        bool get_ready() { return is_ready_; }
     protected:
         std::atomic<bool> is_ready_;
         std::shared_ptr<NodeHandle> node_handle_;

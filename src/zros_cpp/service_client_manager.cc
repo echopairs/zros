@@ -23,14 +23,15 @@ namespace zros {
     }
 
     bool ServiceClientManager::registerClient(const std::shared_ptr<zros::IServiceClient> client) {
-        // 1. register to master first
+        // 1. register to memory first
+        impl_->registerClient(client);
+        // 2. register to master
         bool ok = service_discovery_->addServiceClient(client);
         if (ok) {
             SSPD_LOG_INFO << "register client " << client->get_service_name() << " to master success";
-            // 2. register to memory
-            impl_->registerClient(client);
             return true;
-         }
+        }
+        impl_->unregisterServiceClient(client->get_service_name());
         SSPD_LOG_WARNING << "register client " << client->get_service_name() << " to master failed";
         return false;
     }

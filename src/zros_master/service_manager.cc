@@ -47,12 +47,10 @@ namespace zros {
         }
     }
 
-    void ServiceManager::removeServer(const zros_rpc::ServiceServerInfo &sinfo) {
-        if (isHasServer(sinfo)) {
-            // true
+    void ServiceManager::removeServer(const zros_rpc::ServiceServerInfo& serverInfo) {
+        if (isHasServer(serverInfo)) {
             std::unique_lock<std::mutex> lk(smtx_);
-            auto smap = servers_.find(sinfo.service_name());
-//            smap->erase(sinfo.physical_node_info().agent_address());
+            servers_.erase(serverInfo.service_name());
         }
     }
 
@@ -78,15 +76,11 @@ namespace zros {
     }
 
     bool ServiceManager::isHasServer(const zros_rpc::ServiceServerInfo& serverInfo) {
-//        std::unique_lock<std::mutex> lk(smtx_);
-//        auto smap = servers_.find(sinfo.service_name());
-//        if (smap != servers_.end()) {
-//            auto s = smap->second.find(sinfo.physical_node_info().agent_address());
-//            if (s != smap->second.end()) {
-//                return true;
-//            }
-//        }
-//        return false;
+        std::unique_lock<std::mutex> lk(smtx_);
+        if (servers_.find(serverInfo.service_name()) == servers_.end()) {
+            return false;
+        }
+        return true;
     }
 
     void ServiceManager::removeAllServer() {

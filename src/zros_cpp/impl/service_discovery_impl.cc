@@ -11,6 +11,7 @@ namespace zros {
     ServiceDiscoveryImpl::RegisterServiceServer(grpc::ServerContext *context,
                                                              const zros_rpc::ServiceServerInfo *request,
                                                 zros_rpc::Status *response) {
+        SSPD_LOG_INFO << "receive register service server " << request->service_name();
         deal_register_service_server_cb_(request, response);
         return grpc::Status::OK;
     }
@@ -59,22 +60,30 @@ namespace zros {
     }
 
     void ServiceDiscoveryImpl::spin() {
-
-        grpc::ServerBuilder builder;
-        builder.AddListeningPort(this->agent_address_, grpc::InsecureServerCredentials());
-        builder.RegisterService(this);
-        grpc_server_ = std::move(builder.BuildAndStart());
-        SSPD_LOG_INFO << "service discovery agent to work...";
-        grpc_server_->Wait();
+        if (spin_thread_) {
+            SSPD_LOG_WARNING << "service discovery already spin";
+            return;
+        }
+        spin_thread_ = std::make_shared<std::thread>([this]() {
+            grpc::ServerBuilder builder;
+            builder.AddListeningPort(this->agent_address_, grpc::InsecureServerCredentials());
+            builder.RegisterService(this);
+            grpc_server_ = std::move(builder.BuildAndStart());
+            SSPD_LOG_INFO << "service discovery agent to work...";
+            grpc_server_->Wait();
+        });
     }
 
     ServiceDiscoveryImpl::~ServiceDiscoveryImpl() {
         grpc_server_->Shutdown();
+        if (spin_thread_) {
+            spin_thread_->join();
+        }
     }
 
     bool ServiceDiscoveryImpl::addServiceServer(const std::shared_ptr<IServiceServer> server) {
         grpc::ClientContext context;
-        context.set_deadline(std::chrono::system_clock::now() + std::chrono::milliseconds(5000));
+//        context.set_deadline(std::chrono::system_clock::now() + std::chrono::milliseconds(5000));
         zros_rpc::ServiceServerInfo request;
         zros_rpc::Status response;
 
