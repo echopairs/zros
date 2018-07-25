@@ -71,6 +71,15 @@ namespace zros {
     }
 
     void NodeManager::healthCheck() {
-      // TODO
+        std::unique_lock<std::mutex> lk(mtx_);
+        for (auto it = nodes_.begin(); it != nodes_.end();) {
+            auto status = std::get<1>(*it->second.get())->GetState(true);
+            if (status == GRPC_CHANNEL_TRANSIENT_FAILURE || status == GRPC_CHANNEL_SHUTDOWN) {
+                SSPD_LOG_INFO << "remove node " << it->first;
+                it = nodes_.erase(it);
+            } else {
+                ++it;
+            }
+        }
     }
 }  // end of namespace nsky

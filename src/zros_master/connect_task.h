@@ -29,13 +29,12 @@ namespace zros {
             OK    = 1 << 1
         };
 
-        TaskStatus(const TaskStatusFlag& flag, const std::string& detail)
-                :flag_(flag), detail_(detail) {
+        TaskStatus(const TaskStatusFlag& flag)
+                :flag_(flag) {
+            details_.clear();
         }
-
-    protected:
         TaskStatusFlag flag_;
-        std::string detail_;
+        std::vector<std::string> details_;
     };
 
     // may be take this as interface
@@ -72,11 +71,4 @@ namespace zros {
         std::shared_ptr<NodeManager> nodeManager_;
         std::shared_ptr<ServiceManager> serviceManager_;
     };
-
-    class TaskManager {
-    public:
-    private:
-
-    };
-
 }  // end of namespace nsky

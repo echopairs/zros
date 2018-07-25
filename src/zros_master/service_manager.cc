@@ -54,20 +54,20 @@ namespace zros {
         }
     }
 
-    void ServiceManager::removeClient(const zros_rpc::ServiceClientInfo &cinfo) {
-        if (isHasClient(cinfo)) {
+    void ServiceManager::removeClient(const zros_rpc::ServiceClientInfo& clientInfo) {
+        if (isHasClient(clientInfo)) {
             // true
             std::unique_lock<std::mutex> lk(cmtx_);
-            auto cmap = clients_.find(cinfo.service_name());
-            cmap->second.erase(cinfo.physical_node_info().agent_address());
+            auto cmap = clients_.find(clientInfo.service_name());
+            cmap->second.erase(clientInfo.physical_node_info().agent_address());
         }
     }
 
-    bool ServiceManager::isHasClient(const zros_rpc::ServiceClientInfo &cinfo) {
+    bool ServiceManager::isHasClient(const zros_rpc::ServiceClientInfo& clientInfo) {
         std::unique_lock<std::mutex> lk(cmtx_);
-        auto cmap = clients_.find(cinfo.service_name());
+        auto cmap = clients_.find(clientInfo.service_name());
         if (cmap != clients_.end()) {
-            auto c = cmap->second.find(cinfo.physical_node_info().agent_address());
+            auto c = cmap->second.find(clientInfo.physical_node_info().agent_address());
             if (c != cmap->second.end()) {
               return true;
             }
