@@ -54,7 +54,6 @@ namespace zros {
 	private:
         std::atomic<bool> health_check_;
         std::shared_ptr<std::thread> health_check_thread_;
-        std::shared_ptr<std::thread> update_connect_thread_;
 
 		std::string server_address_;
 		grpc::ServerBuilder builder_;
@@ -63,7 +62,6 @@ namespace zros {
 		std::shared_ptr<NodeManager> nodeManager_;
 		std::shared_ptr<ServiceManager> serviceManager_;
 
-		//
 		ThreadPool thread_pool_;
 	};
 }

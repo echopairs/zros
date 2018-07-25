@@ -6,7 +6,8 @@ namespace zros {
 
 	MasterServiceImpl::MasterServiceImpl(const std::string &address):
             server_address_(address),
-            thread_pool_(4) {
+            thread_pool_(4),
+            health_check_(false) {
 		nodeManager_ = std::make_shared<NodeManager>();
 		serviceManager_ = std::make_shared<ServiceManager>();
 
@@ -42,6 +43,12 @@ namespace zros {
 															 server, *clientInfo, nodeManager_, serviceManager_);
 			thread_pool_.enqueue([task, this](){
 				auto status = task->performTask();
+				if (status.flag_ == status.Error) {
+				    SSPD_LOG_WARNING << "registerServiceClient task failed, the reason is ";
+				    for (auto s : status.details_) {
+				        SSPD_LOG_WARNING << s;
+				    }
+				}
 			});
 		}
         status->set_code(status->OK);
@@ -59,8 +66,12 @@ namespace zros {
 	}
 
 	void MasterServiceImpl::runServer() {
-	    health_check_thread_ = std::make_shared<std::thread>([](){
-
+	    health_check_thread_ = std::make_shared<std::thread>([this](){
+            health_check_ = true;
+			while(health_check_) {
+				nodeManager_->healthCheck();
+				std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			}
 	    });
 
         builder_.AddListeningPort(server_address_, grpc::InsecureServerCredentials());
@@ -78,4 +89,4 @@ namespace zros {
 		SSPD_LOG_INFO << "master End";
 	}
 
-} // namespace nsky
+} // namespace zros
