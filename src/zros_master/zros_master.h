@@ -49,6 +49,12 @@ namespace zros {
 		grpc::Status RegisterServiceClient(::grpc::ServerContext* context, const ::zros_rpc::ServiceClientInfo* request, ::zros_rpc::Status* response) override;
 		grpc::Status UnregisterServiceClient(::grpc::ServerContext* context, const ::zros_rpc::ServiceClientInfo* request, ::zros_rpc::Status* response) override;
 		grpc::Status Ping(::grpc::ServerContext* context, const ::zros_rpc::PingRequest* request, ::zros_rpc::Status* response) override;
+
+		grpc::Status RegisterPublisher(::grpc::ServerContext* context, const zros_rpc::PublisherInfo* request, ::zros_rpc::Status* response) override ;
+		grpc::Status UnregisterPublisher(::grpc::ServerContext* context, const zros_rpc::PublisherInfo* request, ::zros_rpc::Status* response) override ;
+		grpc::Status RegisterSubscriber(::grpc::ServerContext* context, const zros_rpc::SubscriberInfo* request, ::zros_rpc::Status* response) override ;
+		grpc::Status UnregisterSubscriber(::grpc::ServerContext* context, const zros_rpc::SubscriberInfo* request, ::zros_rpc::Status* response) override ;
+
 		void runServer();
 		virtual ~MasterServiceImpl();
 	private:

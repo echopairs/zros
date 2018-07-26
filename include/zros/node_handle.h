@@ -11,6 +11,7 @@
 
 #include <zros/service_server_manager.h>
 #include <zros/service_client_manager.h>
+#include <zros/publisher_manager.h>
 #include <zros.pb.h>
 
 namespace zros {
@@ -52,6 +53,20 @@ namespace zros {
             return service_client;
         };
 
+        template <typename TMessage>
+        std::shared_ptr<Publisher<TMessage> > advertise(const std::string& topic) {
+            if (topic.length() <= 0) {
+                throw invalid_argument("topic cannot be empty");
+            }
+            auto publisher = std::make_shared<Publisher<TMessage> > (topic, shared_from_this());
+            bool ok = publisher_manager_->registerPublisher(publisher);
+            if (!ok) {
+                SSPD_LOG_ERROR << "advertise publisher " << topic << " failed";
+                return nullptr;
+            }
+            return publisher;
+        }
+
         std::shared_ptr<zros_rpc::ServiceResponse> call(const std::string & service_name, const std::string & content,
                                                         const std::string & cli_info, int timeout_mseconds);
         // todo random generate
@@ -73,6 +88,7 @@ namespace zros {
 
         std::shared_ptr<ServiceServerManager> service_server_mgr_;
         std::shared_ptr<ServiceClientManager> service_client_mgr_;
+        std::shared_ptr<PublisherManager> publisher_manager_;
 
     };
 }

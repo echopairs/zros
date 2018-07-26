@@ -7,8 +7,8 @@ if(UNIX)
   set(PROTOBUF_PROTOC_EXECUTABLE /usr/local/bin/protoc)
   set(GRPC_CPP_PLUGIN_EXECUTABLE /usr/local/bin/grpc_cpp_plugin)
   set(GRPC_LIBRARIES libgrpc++.a libgrpc.a)
+  set(ZEROMQ_LIBRARIES zmq)
   link_libraries(tcmalloc.a profiler.a -lpthread -lz -lssl -lcrypto)
-  # TODO
 elseif(WIN32)
 # TODO
 endif(UNIX)
@@ -24,7 +24,6 @@ set(ZROS_GRPC_PROTO ${zros_SOURCE_DIR}/src/zros_proto/zros.proto)
 
 find_Package(Protobuf REQUIRED)
 
-
 # which need package to zros lib for other use
 set (ZROS_FILES
 	${zros_SOURCE_DIR}/include/zros/signal_handle.h
@@ -33,6 +32,9 @@ set (ZROS_FILES
 	${zros_SOURCE_DIR}/include/zros/service_discovery.h
 	${zros_SOURCE_DIR}/include/zros/service_server_interface.h
 	${zros_SOURCE_DIR}/include/zros/service_server.h
+	${zros_SOURCE_DIR}/include/zros/publisher_interface.h
+	${zros_SOURCE_DIR}/include/zros/publisher.h
+	${zros_SOURCE_DIR}/include/zros/publisher_manager.h
 
 	${zros_SOURCE_DIR}/include/zros/node_handle.h
 	${zros_SOURCE_DIR}/src/zros_cpp/node_handle.cc
@@ -52,6 +54,9 @@ set (ZROS_FILES
 	${zros_SOURCE_DIR}/src/zros_cpp/impl/service_clients_impl.h
 	${zros_SOURCE_DIR}/src/zros_cpp/impl/service_clients_impl.cc
 	${zros_SOURCE_DIR}/src/zros_cpp/service_client_interface.cc
+	${zros_SOURCE_DIR}/src/zros_cpp/publisher_manager.cc
+	${zros_SOURCE_DIR}/src/zros_cpp/impl/publisher_impl.h
+	${zros_SOURCE_DIR}/src/zros_cpp/impl/publisher_impl.cc
 )
 
 
@@ -78,7 +83,7 @@ set_source_files_properties(${PROTO_SRCS} ${PROTO_HDRS} PROPERTIES GENERATED TRU
 
 # zros
 add_library(zros ${ZROS_FILES} ${PROTO_SRCS} ${PROTO_HDRS})
-target_link_libraries(zros ${GRPC_LIBRARIES} ${PROTOBUF_LIBRARIES})
+target_link_libraries(zros ${GRPC_LIBRARIES} ${PROTOBUF_LIBRARIES} ${ZEROMQ_LIBRARIES})
 
 
 # install zros
@@ -128,3 +133,6 @@ target_link_libraries(example_service_server zros)
 
 add_executable(example_service_client ${zros_SOURCE_DIR}/examples/cpp/example_service_client.cc ${EXAMPLE_PROTO_SRCS} ${EXAMPLE_PROTO_HDRS})
 target_link_libraries(example_service_client zros)
+
+add_executable(example_publisher ${zros_SOURCE_DIR}/examples/cpp/example_publisher.cc ${EXAMPLE_PROTO_SRCS} ${EXAMPLE_PROTO_HDRS})
+target_link_libraries(example_publisher zros)

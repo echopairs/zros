@@ -7,6 +7,7 @@
 #include <memory>
 #include <zros/service_server.h>
 #include <zros/service_client.h>
+#include <zros/publisher.h>
 
 namespace zros {
     using DealRegisterServiceServerCb = std::function<void(const zros_rpc::ServiceServerInfo *serverInfo, zros_rpc::Status *status)>;
@@ -25,6 +26,7 @@ namespace zros {
 
         bool addServiceServer(const std::shared_ptr<IServiceServer> server);
         bool addServiceClient(const std::shared_ptr<IServiceClient> client);
+        bool addPublisher(const std::shared_ptr<IPublisher> publisher);
 
         void set_register_service_server_cb(DealRegisterServiceServerCb cb);
         void set_unregister_service_server_cb(DealRegisterServiceServerCb cb);
