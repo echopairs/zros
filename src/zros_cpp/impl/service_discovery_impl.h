@@ -10,6 +10,7 @@
 #include <thread>
 #include <zros/service_server_interface.h>
 #include <zros/service_client_interface.h>
+#include <zros/publisher_interface.h>
 
 
 using grpc::Channel;
@@ -26,7 +27,7 @@ namespace zros {
         bool isConnectedToMaster();
 
         // todo add pub/sub/client/server
-        void addPublisher();
+        bool addPublisher(const std::shared_ptr<IPublisher> publisher);
         void addSubscriber();
         bool addServiceServer(const std::shared_ptr<IServiceServer> server);
         bool addServiceClient(const std::shared_ptr<IServiceClient> client);

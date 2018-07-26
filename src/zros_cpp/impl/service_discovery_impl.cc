@@ -107,4 +107,16 @@ namespace zros {
 
         return status.ok() && response.code() == zros_rpc::Status::OK;
     }
+
+    bool ServiceDiscoveryImpl::addPublisher(const std::shared_ptr<IPublisher> publisher) {
+        grpc::ClientContext context;
+        context.set_deadline(std::chrono::system_clock::now() + std::chrono::milliseconds(5000));
+        zros_rpc::PublisherInfo request;
+        zros_rpc::Status response;
+        request.set_topic(publisher->get_topic());
+        request.mutable_physical_node_info()->set_agent_address(agent_address_);
+        request.mutable_physical_node_info()->set_real_address(publisher->get_address());
+        auto status = master_rpc_stub_->RegisterPublisher(&context, request, &response);
+        return status.ok() && response.code() == zros_rpc::Status::OK;
+    }
 } // namespace zros

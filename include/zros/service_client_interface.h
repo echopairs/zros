@@ -10,7 +10,6 @@
 #include <zros.grpc.pb.h>
 
 namespace zros {
-
     class NodeHandle;
     class IServiceClient {
     public:
