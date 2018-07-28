@@ -35,19 +35,22 @@ set (ZROS_FILES
 	${zros_SOURCE_DIR}/include/zros/publisher_interface.h
 	${zros_SOURCE_DIR}/include/zros/publisher.h
 	${zros_SOURCE_DIR}/include/zros/publisher_manager.h
-
+	${zros_SOURCE_DIR}/include/zros/subscriber.h
+	${zros_SOURCE_DIR}/include/zros/subscriber_interface.h
 	${zros_SOURCE_DIR}/include/zros/node_handle.h
-	${zros_SOURCE_DIR}/src/zros_cpp/node_handle.cc
-
+	${zros_SOURCE_DIR}/include/zros/service_server_manager.h
+	${zros_SOURCE_DIR}/include/zros/service_client_manager.h
 	${zros_SOURCE_DIR}/include/zros/zros.h
-	${zros_SOURCE_DIR}/src/zros_cpp/zros.cc
+	${zros_SOURCE_DIR}/include/zros/subscriber.h
+	${zros_SOURCE_DIR}/include/zros/subscriber_interface.h
+	${zros_SOURCE_DIR}/include/zros/subscriber_manager.h
 
+	${zros_SOURCE_DIR}/src/zros_cpp/subscriber_manager.cc
+	${zros_SOURCE_DIR}/src/zros_cpp/node_handle.cc
+	${zros_SOURCE_DIR}/src/zros_cpp/zros.cc
 	${zros_SOURCE_DIR}/src/zros_cpp/service_discovery.cc
 	${zros_SOURCE_DIR}/src/zros_cpp/impl/service_discovery_impl.cc
-
-	${zros_SOURCE_DIR}/include/zros/service_server_manager.h
 	${zros_SOURCE_DIR}/src/zros_cpp/service_server_manager.cc
-	${zros_SOURCE_DIR}/include/zros/service_client_manager.h
 	${zros_SOURCE_DIR}/src/zros_cpp/service_client_manager.cc
 	${zros_SOURCE_DIR}/src/zros_cpp/impl/service_servers_impl.h
 	${zros_SOURCE_DIR}/src/zros_cpp/impl/service_servers_impl.cc
