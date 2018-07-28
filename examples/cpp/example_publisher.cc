@@ -26,6 +26,8 @@ int main() {
     std::thread pub_thread = std::thread([pub](){
         while(true) {
             zros_example::TestMessage message;
+            message.set_detail("hello world");
+            pub->publish(message);
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
     });

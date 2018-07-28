@@ -69,6 +69,7 @@ namespace zros {
 
         std::shared_ptr<zros_rpc::ServiceResponse> call(const std::string & service_name, const std::string & content,
                                                         const std::string & cli_info, int timeout_mseconds);
+        void publish(const std::string& topic, const std::string& content);
         // todo random generate
         NodeHandle(const std::string &node_address, const std::string &node_name);
 

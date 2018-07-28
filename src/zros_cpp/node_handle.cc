@@ -34,4 +34,8 @@ namespace zros {
                      int timeout_mseconds) {
         return service_client_mgr_->call(service_name, content, cli_info, timeout_mseconds);
     }
+
+    void NodeHandle::publish(const std::string &topic, const std::string &content) {
+        publisher_manager_->publish(topic, content);
+    }
 }

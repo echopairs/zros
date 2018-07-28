@@ -54,6 +54,7 @@ set (ZROS_FILES
 	${zros_SOURCE_DIR}/src/zros_cpp/impl/service_clients_impl.h
 	${zros_SOURCE_DIR}/src/zros_cpp/impl/service_clients_impl.cc
 	${zros_SOURCE_DIR}/src/zros_cpp/service_client_interface.cc
+	${zros_SOURCE_DIR}/src/zros_cpp/publisher_interface.cc
 	${zros_SOURCE_DIR}/src/zros_cpp/publisher_manager.cc
 	${zros_SOURCE_DIR}/src/zros_cpp/impl/publisher_impl.h
 	${zros_SOURCE_DIR}/src/zros_cpp/impl/publisher_impl.cc

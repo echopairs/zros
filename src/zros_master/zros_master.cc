@@ -24,10 +24,10 @@ namespace zros {
 	    });
 
 	    int selected_port;
-        builder_.AddListeningPort("[::]:", grpc::InsecureServerCredentials(), &selected_port);
+        builder_.AddListeningPort(server_address_, grpc::InsecureServerCredentials(), &selected_port);
         builder_.RegisterService(this);
         server_ = std::move(builder_.BuildAndStart());
-        SSPD_LOG_INFO << "master run on " << server_address_ << " " << selected_port;
+        SSPD_LOG_INFO << "master run on " << server_address_ << " ";
         server_->Wait();
 	}
 
@@ -100,6 +100,7 @@ namespace zros {
 	MasterServiceImpl::RegisterPublisher(::grpc::ServerContext *context, const zros_rpc::PublisherInfo *request,
 										 ::zros_rpc::Status *response) {
 		SSPD_LOG_INFO << "RegisterPublisher";
+		SSPD_LOG_INFO << "Agent node is " << request->physical_node_info().agent_address();
 		nodeManager_->addNode(request->physical_node_info().agent_address());
 		auto subList = topicManager_->addPublisher(*request);
 		for (auto sub : subList) {
