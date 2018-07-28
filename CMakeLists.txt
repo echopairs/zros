@@ -109,6 +109,8 @@ set (ZROS_MASTER_SRC
 	${zros_SOURCE_DIR}/src/zros_master/node_manager.cc
     ${zros_SOURCE_DIR}/src/zros_master/service_manager.cc
     ${zros_SOURCE_DIR}/src/zros_master/service_manager.h
+	${zros_SOURCE_DIR}/src/zros_master/topic_manager.cc
+    ${zros_SOURCE_DIR}/src/zros_master/topic_manager.h
 	${zros_SOURCE_DIR}/src/zros_master/connect_task.h
 	${zros_SOURCE_DIR}/src/zros_master/connect_task.cc
   )

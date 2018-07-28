@@ -24,6 +24,10 @@ int main() {
             service_name
             );
 
+    auto client2 = node_handle->serviceClient<zros_example::TestServiceRequest, zros_example::TestServiceResponse>(
+            "test_service2"
+    );
+
     std::thread call_thread = std::thread([client]() {
         while (true) {
             zros_example::TestServiceRequest request;

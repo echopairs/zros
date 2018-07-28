@@ -21,6 +21,7 @@
 namespace zros {
     class NodeManager;
     class ServiceManager;
+    class TopicManager;
 
     class TaskStatus {
     public:
@@ -71,4 +72,20 @@ namespace zros {
         std::shared_ptr<NodeManager> nodeManager_;
         std::shared_ptr<ServiceManager> serviceManager_;
     };
-}  // end of namespace nsky
+
+
+    class TopicConnectTask : public IConnectTask {
+    public:
+        TopicConnectTask(const taskType& type,
+                         const zros_rpc::PublisherInfo& publisherInfo,
+                         const zros_rpc::SubscriberInfo& subscriberInfo,
+                         std::shared_ptr<NodeManager>nodeManager, std::shared_ptr<TopicManager>);
+        TaskStatus performTask() override ;
+
+    private:
+        zros_rpc::PublisherInfo publisherInfo_;
+        zros_rpc::SubscriberInfo subscriberInfo_;
+        std::shared_ptr<NodeManager> nodeManager_;
+        std::shared_ptr<TopicManager> topicManager_;
+    };
+}  // namespace zros

@@ -9,7 +9,7 @@
 namespace zros {
 
     std::shared_ptr<ServiceDiscovery> serviceDiscovery = nullptr;
-    void init(const std::string &masterAddress, const std::string &agentAddress) {
+    void init(const std::string &masterAddress, const std::string &agentAddress = "[::]") {
         serviceDiscovery = SingleTon<ServiceDiscovery>::Instance(masterAddress, agentAddress);
         serviceDiscovery->init();
         spin();

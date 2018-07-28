@@ -10,6 +10,7 @@ namespace zros {
             health_check_(false) {
 		nodeManager_ = std::make_shared<NodeManager>();
 		serviceManager_ = std::make_shared<ServiceManager>();
+		topicManager_  = std::make_shared<TopicManager>();
 
 	}
 
@@ -22,10 +23,11 @@ namespace zros {
 			}
 	    });
 
-        builder_.AddListeningPort(server_address_, grpc::InsecureServerCredentials());
+	    int selected_port;
+        builder_.AddListeningPort("[::]:", grpc::InsecureServerCredentials(), &selected_port);
         builder_.RegisterService(this);
         server_ = std::move(builder_.BuildAndStart());
-        SSPD_LOG_INFO << "master run on " << server_address_;
+        SSPD_LOG_INFO << "master run on " << server_address_ << " " << selected_port;
         server_->Wait();
 	}
 
@@ -99,6 +101,19 @@ namespace zros {
 										 ::zros_rpc::Status *response) {
 		SSPD_LOG_INFO << "RegisterPublisher";
 		nodeManager_->addNode(request->physical_node_info().agent_address());
+		auto subList = topicManager_->addPublisher(*request);
+		for (auto sub : subList) {
+			auto task = std::make_shared<TopicConnectTask>(TopicConnectTask::taskType::connect, *request, sub, nodeManager_, topicManager_);
+			thread_pool_.enqueue([task](){
+				auto status = task->performTask();
+				if (status.flag_ == status.Error) {
+					SSPD_LOG_WARNING << "RegisterPublisher task failed, the reason is ";
+					for (auto s : status.details_) {
+						SSPD_LOG_WARNING << s;
+					}
+				}
+			});
+		}
 		response->set_code(response->OK);
 		return grpc::Status::OK;
 	}
@@ -112,7 +127,23 @@ namespace zros {
 	grpc::Status
 	MasterServiceImpl::RegisterSubscriber(::grpc::ServerContext *context, const zros_rpc::SubscriberInfo *request,
 										  ::zros_rpc::Status *response) {
-		return Service::RegisterSubscriber(context, request, response);
+		SSPD_LOG_INFO << "RegisterSubscriber";
+		nodeManager_->addNode(request->physical_node_info().agent_address());
+		auto pubList = topicManager_->addSubscriber(*request);
+		for (auto pub : pubList) {
+			auto task = std::make_shared<TopicConnectTask>(TopicConnectTask::taskType::connect, pub, *request, nodeManager_, topicManager_);
+			thread_pool_.enqueue([task](){
+				auto status = task->performTask();
+				if (status.flag_ == status.Error) {
+					SSPD_LOG_WARNING << "RegisterSubscriber task failed, the reason is ";
+					for (auto s : status.details_) {
+						SSPD_LOG_WARNING << s;
+					}
+				}
+			});
+		}
+		response->set_code(response->OK);
+		return grpc::Status::OK;
 	}
 
 	grpc::Status
