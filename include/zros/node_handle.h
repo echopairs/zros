@@ -74,11 +74,11 @@ namespace zros {
                 throw invalid_argument("topic cannot be empty");
             }
             auto subscriber = std::make_shared<Subscriber<TMessage> > (topic, cb, thread_pool_);
-//            bool ok = publisher_manager_->registerPublisher(publisher);
-//            if (!ok) {
-//                SSPD_LOG_ERROR << "advertise publisher " << topic << " failed";
-//                return nullptr;
-//            }
+            bool ok = subscriber_manager_->registerSubscriber(subscriber);
+            if (!ok) {
+                SSPD_LOG_ERROR << "subscribe subscriber " << topic << " failed";
+                return nullptr;
+            }
             return subscriber;
         }
 

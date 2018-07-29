@@ -2,6 +2,8 @@
 // Created by pairs on 7/28/18.
 //
 
+#pragma once
+
 #include "subscriber_interface.h"
 #include "serialization_helper.h"
 #include <functional>
@@ -15,7 +17,7 @@ namespace zros {
         }
         void handleRawMessage(const std::string& message) {
             TMessage type_message;
-            parseFromString(message, type_message);
+            parseFromString(message, &type_message);
             thread_pool_->enqueue(subscriber_cb_, type_message);
         }
     protected:

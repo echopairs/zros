@@ -6,8 +6,8 @@ service ServiceRPC {
 }
 
 service ServiceDiscoveryRPC {
-    rpc RegisterSubscriber(SubscriberInfo) returns (Status) {}
-    rpc UnregisterSubscriber(SubscriberInfo) returns (Status) {}
+    rpc RegisterPublisher(PublisherInfo) returns (Status) {}
+    rpc UnregisterPublisher(PublisherInfo) returns (Status) {}
     rpc RegisterServiceServer(ServiceServerInfo) returns (Status) {}
     rpc UnregisterServiceServer(ServiceServerInfo) returns (Status) {}
     rpc Ping(PingRequest) returns (Status) {}

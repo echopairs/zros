@@ -115,13 +115,12 @@ namespace zros {
         SSPD_LOG_INFO << "agent_address is " << subscriberInfo_.physical_node_info().agent_address();
         if (type_ == taskType::connect) {
             SSPD_LOG_INFO << subscriberInfo_.physical_node_info().agent_address();
-//            status = stub->RegisterSubscriber()
-//            status = stub->RegisterServiceServer(context.get(), serverInfo_, &response);
+            status = stub->RegisterPublisher(context.get(), publisherInfo_, &response);
         } else {
-//            status = stub->UnregisterServiceServer(context.get(), serverInfo_, &response);
+            status = stub->UnregisterPublisher(context.get(), publisherInfo_, &response);
         }
         if (!status.ok()) {
-            SSPD_LOG_WARNING << "register service server failed" << status.error_details();
+            SSPD_LOG_WARNING << "register publisher to subscriber failed" << status.error_details();
             SSPD_LOG_INFO << status.error_message();
             taskStatus.flag_ = taskStatus.Error;
             taskStatus.details_.emplace_back(status.error_message());

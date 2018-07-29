@@ -8,10 +8,11 @@
 #include <zros/service_server.h>
 #include <zros/service_client.h>
 #include <zros/publisher.h>
+#include <zros/subscriber.h>
 
 namespace zros {
     using DealRegisterServiceServerCb = std::function<void(const zros_rpc::ServiceServerInfo *serverInfo, zros_rpc::Status *status)>;
-    using DealRegisterSubscriberCb = std::function<void(const zros_rpc::SubscriberInfo *subInfo, zros_rpc::Status *status)>;
+    using DealRegisterPublisherCb = std::function<void(const zros_rpc::PublisherInfo *publisherInfo, zros_rpc::Status *status)>;
 
     class ServiceDiscoveryImpl;
     class ServiceDiscovery {
@@ -27,11 +28,12 @@ namespace zros {
         bool addServiceServer(const std::shared_ptr<IServiceServer> server);
         bool addServiceClient(const std::shared_ptr<IServiceClient> client);
         bool addPublisher(const std::shared_ptr<IPublisher> publisher);
+        bool addSubscriber(const std::shared_ptr<ISubscriber> subscriber);
 
         void set_register_service_server_cb(DealRegisterServiceServerCb cb);
         void set_unregister_service_server_cb(DealRegisterServiceServerCb cb);
-        void set_register_subscriber_cb(DealRegisterSubscriberCb cb);
-        void set_unregister_subscriber_cb(DealRegisterSubscriberCb cb);
+        void set_register_publisher_cb(DealRegisterPublisherCb cb);
+        void set_unregister_publisher_cb(DealRegisterPublisherCb cb);
 
     private:
         std::shared_ptr<ServiceDiscoveryImpl> impl_;

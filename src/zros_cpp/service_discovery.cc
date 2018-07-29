@@ -40,6 +40,10 @@ namespace zros {
         return impl_->addPublisher(publisher);
     }
 
+    bool ServiceDiscovery::addSubscriber(const std::shared_ptr<ISubscriber> subscriber) {
+        return impl_->addSubscriber(subscriber);
+    }
+
     void ServiceDiscovery::set_register_service_server_cb(DealRegisterServiceServerCb cb) {
         impl_->set_register_service_server_cb(cb);
     }
@@ -48,12 +52,12 @@ namespace zros {
         impl_->set_unregister_service_server_cb(cb);
     }
 
-    void ServiceDiscovery::set_register_subscriber_cb(DealRegisterSubscriberCb cb) {
-        impl_->set_register_subscriber_cb(cb);
+    void ServiceDiscovery::set_unregister_publisher_cb(DealRegisterPublisherCb cb) {
+
     }
 
-    void ServiceDiscovery::set_unregister_subscriber_cb(DealRegisterSubscriberCb cb) {
-        impl_->set_unregister_subscriber_cb(cb);
+    void ServiceDiscovery::set_register_publisher_cb(DealRegisterPublisherCb cb) {
+        impl_->set_register_publisher_cb(cb);
     }
 
 }
