@@ -35,28 +35,35 @@ set (ZROS_FILES
 	${zros_SOURCE_DIR}/include/zros/publisher_interface.h
 	${zros_SOURCE_DIR}/include/zros/publisher.h
 	${zros_SOURCE_DIR}/include/zros/publisher_manager.h
-
+	${zros_SOURCE_DIR}/include/zros/subscriber.h
+	${zros_SOURCE_DIR}/include/zros/subscriber_interface.h
 	${zros_SOURCE_DIR}/include/zros/node_handle.h
-	${zros_SOURCE_DIR}/src/zros_cpp/node_handle.cc
-
-	${zros_SOURCE_DIR}/include/zros/zros.h
-	${zros_SOURCE_DIR}/src/zros_cpp/zros.cc
-
-	${zros_SOURCE_DIR}/src/zros_cpp/service_discovery.cc
-	${zros_SOURCE_DIR}/src/zros_cpp/impl/service_discovery_impl.cc
-
 	${zros_SOURCE_DIR}/include/zros/service_server_manager.h
-	${zros_SOURCE_DIR}/src/zros_cpp/service_server_manager.cc
 	${zros_SOURCE_DIR}/include/zros/service_client_manager.h
+	${zros_SOURCE_DIR}/include/zros/zros.h
+	${zros_SOURCE_DIR}/include/zros/subscriber.h
+	${zros_SOURCE_DIR}/include/zros/subscriber_interface.h
+	${zros_SOURCE_DIR}/include/zros/subscriber_manager.h
+
+	${zros_SOURCE_DIR}/src/zros_cpp/subscriber_manager.cc
+	${zros_SOURCE_DIR}/src/zros_cpp/node_handle.cc
+	${zros_SOURCE_DIR}/src/zros_cpp/zros.cc
+	${zros_SOURCE_DIR}/src/zros_cpp/service_discovery.cc
+	${zros_SOURCE_DIR}/src/zros_cpp/service_client_interface.cc
+	${zros_SOURCE_DIR}/src/zros_cpp/publisher_interface.cc
+	${zros_SOURCE_DIR}/src/zros_cpp/service_server_manager.cc
 	${zros_SOURCE_DIR}/src/zros_cpp/service_client_manager.cc
+	${zros_SOURCE_DIR}/src/zros_cpp/impl/service_discovery_impl.cc
 	${zros_SOURCE_DIR}/src/zros_cpp/impl/service_servers_impl.h
 	${zros_SOURCE_DIR}/src/zros_cpp/impl/service_servers_impl.cc
 	${zros_SOURCE_DIR}/src/zros_cpp/impl/service_clients_impl.h
 	${zros_SOURCE_DIR}/src/zros_cpp/impl/service_clients_impl.cc
-	${zros_SOURCE_DIR}/src/zros_cpp/service_client_interface.cc
+
 	${zros_SOURCE_DIR}/src/zros_cpp/publisher_manager.cc
 	${zros_SOURCE_DIR}/src/zros_cpp/impl/publisher_impl.h
 	${zros_SOURCE_DIR}/src/zros_cpp/impl/publisher_impl.cc
+	${zros_SOURCE_DIR}/src/zros_cpp/impl/subscriber_impl.h
+	${zros_SOURCE_DIR}/src/zros_cpp/impl/subscriber_impl.cc
 )
 
 
@@ -109,6 +116,8 @@ set (ZROS_MASTER_SRC
 	${zros_SOURCE_DIR}/src/zros_master/node_manager.cc
     ${zros_SOURCE_DIR}/src/zros_master/service_manager.cc
     ${zros_SOURCE_DIR}/src/zros_master/service_manager.h
+	${zros_SOURCE_DIR}/src/zros_master/topic_manager.cc
+    ${zros_SOURCE_DIR}/src/zros_master/topic_manager.h
 	${zros_SOURCE_DIR}/src/zros_master/connect_task.h
 	${zros_SOURCE_DIR}/src/zros_master/connect_task.cc
   )
@@ -136,3 +145,6 @@ target_link_libraries(example_service_client zros)
 
 add_executable(example_publisher ${zros_SOURCE_DIR}/examples/cpp/example_publisher.cc ${EXAMPLE_PROTO_SRCS} ${EXAMPLE_PROTO_HDRS})
 target_link_libraries(example_publisher zros)
+
+add_executable(example_subscriber ${zros_SOURCE_DIR}/examples/cpp/example_subscriber.cc ${EXAMPLE_PROTO_SRCS} ${EXAMPLE_PROTO_HDRS})
+target_link_libraries(example_subscriber zros)

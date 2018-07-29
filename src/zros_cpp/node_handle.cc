@@ -4,7 +4,6 @@
 
 #include <zros/node_handle.h>
 #include <zros.pb.h>
-#include "zros/service_server_manager.h"
 
 namespace zros {
 
@@ -14,6 +13,7 @@ namespace zros {
         service_server_mgr_ = std::make_shared<ServiceServerManager>(node_address);
         service_client_mgr_ = std::make_shared<ServiceClientManager>();
         publisher_manager_ = std::make_shared<PublisherManager>();
+        subscriber_manager_ = std::make_shared<SubscriberManager>();
         spin();
     }
 
@@ -33,5 +33,9 @@ namespace zros {
     NodeHandle::call(const std::string &service_name, const std::string &content, const std::string &cli_info,
                      int timeout_mseconds) {
         return service_client_mgr_->call(service_name, content, cli_info, timeout_mseconds);
+    }
+
+    void NodeHandle::publish(const std::string &topic, const std::string &content) {
+        publisher_manager_->publish(topic, content);
     }
 }

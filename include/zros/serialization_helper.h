@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "zros.grpc.pb.h"
+
 namespace zros {
 
     template <typename T>

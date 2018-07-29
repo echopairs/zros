@@ -41,6 +41,7 @@ namespace zros {
         }
 
     protected:
+        void publish_(const std::string& message);
         std::shared_ptr<NodeHandle> node_handle_;
         std::string address_;
         std::string topic_;

@@ -12,6 +12,7 @@
 #include <zros/service_server_manager.h>
 #include <zros/service_client_manager.h>
 #include <zros/publisher_manager.h>
+#include <zros/subscriber_manager.h>
 #include <zros.pb.h>
 
 namespace zros {
@@ -67,17 +68,27 @@ namespace zros {
             return publisher;
         }
 
+        template <typename TMessage>
+        std::shared_ptr<Subscriber<TMessage> > subscribe(const std::string& topic, std::function<void(const TMessage& message)> cb) {
+            if (topic.length() <= 0) {
+                throw invalid_argument("topic cannot be empty");
+            }
+            auto subscriber = std::make_shared<Subscriber<TMessage> > (topic, cb, thread_pool_);
+            bool ok = subscriber_manager_->registerSubscriber(subscriber);
+            if (!ok) {
+                SSPD_LOG_ERROR << "subscribe subscriber " << topic << " failed";
+                return nullptr;
+            }
+            return subscriber;
+        }
+
         std::shared_ptr<zros_rpc::ServiceResponse> call(const std::string & service_name, const std::string & content,
                                                         const std::string & cli_info, int timeout_mseconds);
+        void publish(const std::string& topic, const std::string& content);
         // todo random generate
         NodeHandle(const std::string &node_address, const std::string &node_name);
 
         void spin();
-
-//        template<typename TFunction, typename... TArgs>
-//        auto enqueueTask(TFunction&& function, TArgs&&... args) -> std::future<typename result_of<TFunction(TArgs...)>::type> {
-//                return thread_pool_->enqueue(std::forward<TFunction>(function), std::forward<TArgs>(args)...);
-//        }
         const string &get_node_address() const;
         const string &get_node_name() const;
     private:
@@ -89,6 +100,7 @@ namespace zros {
         std::shared_ptr<ServiceServerManager> service_server_mgr_;
         std::shared_ptr<ServiceClientManager> service_client_mgr_;
         std::shared_ptr<PublisherManager> publisher_manager_;
+        std::shared_ptr<SubscriberManager> subscriber_manager_;
 
     };
 }

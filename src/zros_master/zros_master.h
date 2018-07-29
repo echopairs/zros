@@ -33,6 +33,7 @@
 #include "zros.grpc.pb.h"
 #include "service_manager.h"
 #include "node_manager.h"
+#include "topic_manager.h"
 
 using grpc::Server;
 using grpc::ServerBuilder;
@@ -67,6 +68,7 @@ namespace zros {
 
 		std::shared_ptr<NodeManager> nodeManager_;
 		std::shared_ptr<ServiceManager> serviceManager_;
+		std::shared_ptr<TopicManager> topicManager_;
 
 		ThreadPool thread_pool_;
 	};

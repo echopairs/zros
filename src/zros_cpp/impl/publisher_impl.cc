@@ -29,6 +29,11 @@ namespace zros {
     }
 
     bool PublishersImpl::publish(const std::string &topic, const std::string &message) {
+        std::lock_guard<std::mutex> lk(pubs_mutex_);
+        if (publishers_.find(topic) != publishers_.end()) {
+            return publishers_[topic]->publish(message);
+        }
+        SSPD_LOG_INFO << "please check publisher " << topic << " if exist";
         return false;
     }
 
