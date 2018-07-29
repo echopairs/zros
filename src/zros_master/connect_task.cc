@@ -99,14 +99,34 @@ namespace zros {
         bool hasSubscriber = topicManager_->isHasSubscriber(subscriberInfo_);
         if (hasSubscriber) {
             // subscriber node already remove
-            if (nodeManager_->getNode(subscriberInfo_.physical_node_info().agent_address())) {
-                // todo
+            if (!nodeManager_->getNode(subscriberInfo_.physical_node_info().agent_address())) {
+                taskStatus.flag_ = taskStatus.Error;
+                taskStatus.details_.emplace_back(subscriberInfo_.physical_node_info().agent_address() + " node already remove");
+                topicManager_->removeSubscriber(subscriberInfo_);
+                hasSubscriber = false;
             }
+        } else {
+            taskStatus.flag_ = taskStatus.Error;
+            taskStatus.details_.emplace_back(subscriberInfo_.physical_node_info().agent_address() + " node already remove");
         }
         // check publisher node
         bool hasPublisher = topicManager_->isHasPublisher(publisherInfo_);
         if (hasPublisher) {
-            // todo
+            auto pub = nodeManager_->getNode(publisherInfo_.physical_node_info().agent_address());
+            // pub node already remove
+            if (!pub) {
+                taskStatus.flag_ = taskStatus.Error;
+                taskStatus.details_.emplace_back(publisherInfo_.physical_node_info().agent_address() + " node already remove");
+                topicManager_->removePublisher(publisherInfo_);
+                hasPublisher = false;
+            }
+        } else {
+            taskStatus.flag_ = taskStatus.Error;
+            taskStatus.details_.emplace_back(publisherInfo_.topic() + " publisher already be remove");
+        }
+
+        if (!hasSubscriber || !hasPublisher) {
+            return taskStatus;
         }
 
         auto context = std::make_shared<grpc::ClientContext>();
