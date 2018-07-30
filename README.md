@@ -1,7 +1,9 @@
 # zros
 
 基于grpc/protobuf/zeromq的分布式网络框架
+
 env: centos7.2/unbuntu
+
 language: c++11/golang/python/node.js
 
 
@@ -9,8 +11,8 @@ language: c++11/golang/python/node.js
 
 ### Tools:
     1. cmake (The main build tool, version >= 3.2)
-    2. python 2.7.11 (refer to `src\jrpc_python` to get more info)
-    3. nodejs 4.2.6 (refer to `src\jrpc_node` to get more info)
+    2. python 2.7.11 (refer to `src\zros_python` to get more info)
+    3. nodejs 4.2.6 (refer to `src\zros_node` to get more info)
 
     More in Linux:
         1) run `sudo apt-get install build-essential autoconf libtool zlib1g-dev`
