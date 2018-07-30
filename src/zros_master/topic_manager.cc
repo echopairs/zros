@@ -12,6 +12,7 @@ namespace zros {
         if (existingPublisherMap == publishers_.end()) {
             std::map<std::string, zros_rpc::PublisherInfo> publisherMap;
             publisherMap[publisherInfo.physical_node_info().agent_address()] = publisherInfo;
+            publishers_[publisherInfo.topic()] = publisherMap;
         } else {
             existingPublisherMap->second[publisherInfo.physical_node_info().agent_address()] = publisherInfo;
         }

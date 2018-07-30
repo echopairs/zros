@@ -100,7 +100,6 @@ namespace zros {
 	MasterServiceImpl::RegisterPublisher(::grpc::ServerContext *context, const zros_rpc::PublisherInfo *request,
 										 ::zros_rpc::Status *response) {
 		SSPD_LOG_INFO << "RegisterPublisher";
-		SSPD_LOG_INFO << "Agent node is " << request->physical_node_info().agent_address();
 		nodeManager_->addNode(request->physical_node_info().agent_address());
 		auto subList = topicManager_->addPublisher(*request);
 		for (auto sub : subList) {
