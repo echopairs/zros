@@ -10,6 +10,6 @@
 
 namespace zros {
     extern std::shared_ptr<ServiceDiscovery> serviceDiscovery;
-    void init(const std::string &masterAddress, const std::string &agentAddress);
+    void init(const std::string &masterAddress, const std::string &agentAddress="[::]:");
     void spin();
 }

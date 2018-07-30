@@ -5,6 +5,7 @@
 #include <sspdlog/sspdlog.h>
 #include "service_discovery_impl.h"
 #include <zros/node_handle.h>
+#include <zros/error.h>
 
 namespace zros {
     grpc::Status
@@ -64,13 +65,20 @@ namespace zros {
             SSPD_LOG_WARNING << "service discovery already spin";
             return;
         }
+        grpc::ServerBuilder builder;
+        int select_port;
+        builder.AddListeningPort(this->agent_address_, grpc::InsecureServerCredentials(), &select_port);
+        builder.RegisterService(this);
+        grpc_server_ = std::move(builder.BuildAndStart());
+        if (select_port == 0) {
+            throw initialize_error("service discovery bind port failed");
+        }
+        if (agent_address_ == "[::]:") {
+            agent_address_ = "localhost:" + std::to_string(select_port);
+        }
         spin_thread_ = std::make_shared<std::thread>([this]() {
-            grpc::ServerBuilder builder;
-            builder.AddListeningPort(this->agent_address_, grpc::InsecureServerCredentials());
-            builder.RegisterService(this);
-            grpc_server_ = std::move(builder.BuildAndStart());
-            SSPD_LOG_INFO << "service discovery agent to work...";
             grpc_server_->Wait();
+            SSPD_LOG_INFO << "service discovery agent work on address " << agent_address_;
         });
     }
 

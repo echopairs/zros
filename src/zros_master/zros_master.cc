@@ -41,7 +41,7 @@ namespace zros {
 
 	grpc::Status
 	MasterServiceImpl::RegisterServiceServer(::grpc::ServerContext* context, const ::zros_rpc::ServiceServerInfo* serverInfo, ::zros_rpc::Status* status) {
-		SSPD_LOG_INFO << "RegisterServiceServer ";
+		SSPD_LOG_INFO << "RegisterServiceServer " << serverInfo->physical_node_info().agent_address();
 		nodeManager_->addNode(serverInfo->physical_node_info().agent_address());
 		auto clientList = serviceManager_->addServer(*serverInfo);
 		for (auto client : clientList) {

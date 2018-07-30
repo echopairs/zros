@@ -14,7 +14,7 @@ namespace zros {
     class ServiceServerManager {
     public:
         ServiceServerManager(const std::string & service_address);
-        void start();
+        const std::string& start();
         void stop();
         bool registerServer(const std::shared_ptr<IServiceServer> server);
         bool unregisterServer(const std::string & service_name);
