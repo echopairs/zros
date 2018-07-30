@@ -15,7 +15,7 @@ namespace zros {
     class IServersImpl {
     public:
         IServersImpl(const std::string & address);
-        virtual void start() = 0;
+        virtual const std::string& start() = 0;
         virtual void stop() = 0;
         bool registerServer(const std::shared_ptr<IServiceServer> server);
         bool unregisterServer(const std::string & service_name);
@@ -28,7 +28,7 @@ namespace zros {
     class GrpcServersImpl : public IServersImpl, public zros_rpc::ServiceRPC::Service {
     public:
         GrpcServersImpl(const std::string &service_address);
-        void start() override;
+        const std::string& start() override;
         void stop() override;
         grpc::Status InvokeService(grpc::ServerContext * context, const zros_rpc::ServiceRequest * request, zros_rpc::ServiceResponse * response) override;
         ~GrpcServersImpl();

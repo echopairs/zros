@@ -14,9 +14,8 @@ int main() {
     zros::init(master_address);
 
     // 2. create node
-    const std::string node_address = "localhost:50003";
     const std::string node_name = "example_publisher";
-    auto node_handle = std::make_shared<zros::NodeHandle>(node_address, node_name);
+    auto node_handle = std::make_shared<zros::NodeHandle>(node_name);
 
     // 3. create publisher
     const std::string topic = "test_topic";

@@ -4,6 +4,8 @@
 
 #include "service_servers_impl.h"
 #include <sspdlog/sspdlog.h>
+#include <zros/zros.h>
+#include <zros/error.h>
 
 namespace zros {
 
@@ -29,20 +31,28 @@ namespace zros {
 
 
     //////////// GrpcServersImpl ///////////////////
-    void GrpcServersImpl::start() {
+    const std::string& GrpcServersImpl::start() {
         if (!is_working_) {
+            SSPD_LOG_INFO << "grpc server to work...";
+            grpc::ServerBuilder builder;
+            int select_port;
+            builder.AddListeningPort(service_address_, grpc::InsecureServerCredentials(), &select_port);
+            builder.RegisterService(this);
+            grpc_server_ = std::move(builder.BuildAndStart());
+            if (select_port == 0) {
+                throw initialize_error("grpc server bind port failed");
+            }
+            if (service_address_ == "[::]:") {
+                service_address_ = "localhost:" + std::to_string(select_port);
+            }
             work_thread_ = std::make_shared<std::thread>([this]() {
-                SSPD_LOG_INFO << "grpc server to work...";
-                grpc::ServerBuilder builder;
-                builder.AddListeningPort(service_address_, grpc::InsecureServerCredentials());
-                builder.RegisterService(this);
-                grpc_server_ = std::move(builder.BuildAndStart());
                 grpc_server_->Wait();
             });
             is_working_ = true;
         } else {
             SSPD_LOG_WARNING << "grpc server already work...";
         }
+        return service_address_;
     }
 
     void GrpcServersImpl::stop() {

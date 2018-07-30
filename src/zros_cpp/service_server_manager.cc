@@ -14,7 +14,7 @@ namespace zros {
         service_discovery_ = SingleTon<ServiceDiscovery>::Instance();
     }
 
-    void ServiceServerManager::start() {
+    const std::string& ServiceServerManager::start() {
         impl_->start();
     }
 

@@ -87,11 +87,13 @@ namespace zros {
         void publish(const std::string& topic, const std::string& content);
         // todo random generate
         NodeHandle(const std::string &node_address, const std::string &node_name);
-
+        NodeHandle(const std::string& node_name);
         void spin();
         const string &get_node_address() const;
         const string &get_node_name() const;
+        void set_node_address(const std::string& address);
     private:
+        void init();
         // rpc server address
         std::string node_address_;
         std::string node_name_;
