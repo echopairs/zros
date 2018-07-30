@@ -8,3 +8,5 @@ external_libs/
 build/
 .idea/
 bin/
+.deb
+.rpm

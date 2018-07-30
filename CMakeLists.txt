@@ -94,15 +94,17 @@ target_link_libraries(zros ${GRPC_LIBRARIES} ${PROTOBUF_LIBRARIES} ${ZEROMQ_LIBR
 
 
 # install zros
+message( ${CMAKE_CURRENT_BINARY_DIR})
 if(UNIX)
   # default is /usr/local/lib
-#  install(TARGETS zros DESTINATION lib)
+  install(TARGETS zros DESTINATION lib)
   install(DIRECTORY ${zros_SOURCE_DIR}/include/zros DESTINATION include)
   install(FILES
-    "${CMAKE_CURRENT_BIANARY_DIR}/zros_rpc.grpc.pb.h"
-    "${CMAKE_CURRENT_BIANARY_DIR}/zros_rpc.pb.h"
-    DESTINATION include/zros
+      "${zros_SOURCE_DIR}/build/zros.grpc.pb.h"
+      "${zros_SOURCE_DIR}/build/zros.pb.h"
+      DESTINATION  include/zros
   )
+    install(DIRECTORY ${zros_SOURCE_DIR}/examples/cpp DESTINATION share)
 endif(UNIX)
 
 
