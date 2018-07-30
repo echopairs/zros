@@ -2,7 +2,7 @@
 
 基于grpc/protobuf/zeromq的分布式网络框架
 
-env: centos7.2/unbuntu
+env: centos7.2/ubuntu
 
 language: c++11/golang/python/node.js
 
