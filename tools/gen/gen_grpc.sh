@@ -44,14 +44,14 @@ protobuf_version=`echo ${protobuf_branch##*' '}`
 make -j 2 || (echo "init grpc failed" exit)
 ## checkinstall upon system
 if [ "$UBUNTU_FLAG"X = "true"X ]; then
-    sudo checkinstall -D --install=no --fstrans=no --default --pkgname=grpc --pkgversion=${grpc_version} --pakdir=$route/../../external_libs/debs >/dev/null 2>&1 || exit 2
+    sudo checkinstall -D --install=no --fstrans=no --default --pkgname=grpc --pkgversion=${grpc_version} --pakdir=$route/../external_libs/debs >/dev/null 2>&1 || exit 2
 else
     echo "/usr/local/lib64" >/etc/ld.so.conf.d/installwatch.conf
     ldconfig
     ln -s /usr/local/lib/installwatch.so /usr/local/lib64/installwatch.so
     yum install -y rpm-build
     yum install -y gcc rpm-build pcre-devel rpmdevtools
-    checkinstall -R --install=no --fstrans=no --default --pkgname=grpc --pkgversion=${grpc_version} --pakdir=$route/../../external_libs/rpms >/dev/null 2>&1 || exit 2
+    checkinstall -R --install=no --fstrans=no --default --pkgname=grpc --pkgversion=${grpc_version} --pakdir=$route/../external_libs/rpms >/dev/null 2>&1 || exit 2
 fi
 
 # init protobuf

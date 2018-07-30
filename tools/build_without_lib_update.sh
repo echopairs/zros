@@ -13,12 +13,17 @@
 script=$(readlink -f "$0")
 route=$(dirname "$script")
 
-EXTERNAL_LIBS_DIR=$route/../external_libs
+which cmake >/dev/null 2>&1 || { echo "build requires cmake but nothig is found"; exit 1; }
 
-# init splog, not good here
-if [ ! -f "$route"/../external_libs/spdlog.tar.gz ]; then
-  echo "---spdlog is not exit, git clone https://github.com/echopairs/spdlog.git" || exit -1
-  fi
+if [ -d "$route/../build" ]; then
+    rm -rf $route/../build
+fi
 
-tar -zxvf "$EXTERNAL_LIBS_DIR"/spdlog.tar.gz -C /usr/local/include >/dev/null 2>&1|| exit -2
+mkdir -p $route/../build
+
+cd $route/../build
+cmake .. -G "Unix Makefiles"
+make -j 1
+
+
 
