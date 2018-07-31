@@ -92,6 +92,7 @@ namespace zros {
 
 	grpc::Status
 	MasterServiceImpl::Ping(::grpc::ServerContext* context, const ::zros_rpc::PingRequest* pingRequest, ::zros_rpc::Status* status) {
+	    SSPD_LOG_INFO << "Ping ";
 		status->set_code(status->OK);
 		return grpc::Status::OK;
 	}

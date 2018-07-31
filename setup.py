@@ -84,10 +84,11 @@ setup (
         'grpcio==1.0.0',
         'pyzmq==16.0.2',
     ],
-    # packages=['zros',
-    #           'zros.pb',
+     packages=['zros',
+               'zros.pb',
     #           'zros.client',
     #           'zros.server'],
+               ],
     package_dir={'zros': 'src/zros_python/zros'},
     cmdclass={'clean':clean, 'build_py': build_py},
 )
