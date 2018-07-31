@@ -65,7 +65,7 @@ class ServiceDiscoveryImpl(zpbg2.ServiceDiscoveryRPCServicer):
         if port == 0:
             raise Exception(u'service discovery bind port failed')
         self._grpc_server.start()
-        logger.info(u'grpc server run on %s', self._agent_address)
+        logger.info(u'service discovery server run on %s', self._agent_address)
 
     def set_register_service_server_cb(self, callback):
         self._deal_register_service_server = callback
