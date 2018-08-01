@@ -49,6 +49,29 @@ class ServiceDiscoveryImpl(zpbg2.ServiceDiscoveryRPCServicer):
         pass
 
     def add_service_server(self, server):
+        timeout = self._STUB_CALL_SHORT_TIME_OUT
+        request = zpb2.ServiceServerInfo()
+        request.service_name = server.get_service_name()
+        request.physical_node_info.agent_address = self._agent_address
+
+        node_handle = server.get_node_handle()
+        node_name = node_handle.get_node_name()
+        node_address = node_handle.get_node_address()
+
+        request.physical_node_info.name = node_name
+        request.physical_node_info.real_address = node_address
+        try:
+            response = self._master_rpc_stub.RegisterServiceServer(request, timeout)
+            if response.code == zpb2.Status.OK:
+                return True
+            else:
+                logger.error(u'register service server %s failed %s ', request.service_name)
+                return False
+        except Exception:
+            logger.error(traceback.format_exc())
+            return False
+
+    def unregister_service_server(self, service_name):
         pass
 
     def add_service_client(self, client):

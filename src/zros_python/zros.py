@@ -31,3 +31,8 @@ def is_initialized():
 def spin():
     global g_service_discovery
     g_service_discovery.spin()
+
+
+def get_service_discovery():
+    global g_service_discovery
+    return g_service_discovery

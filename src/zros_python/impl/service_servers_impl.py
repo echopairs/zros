@@ -74,15 +74,14 @@ class GrpcServersImpl(IServersImpl, zpbg2.ServiceRPCServicer):
     def start(self):
         self._grpc_server = grpc.server(futures.ThreadPoolExecutor(max_workers=4))
         zpbg2.add_ServiceRPCServicer_to_server(self, self._grpc_server)
-        node_address = None
         if self._address == u'[::]:':
             port = self._grpc_server.add_insecure_port(u'[::]:')
-            node_address == u'localhost:' + str(port)
+            self._address = u'localhost:' + str(port)
         else:
             port = self._grpc_server.add_insecure_port(self._address)
         if port == 0:
             raise Exception(u'start service server failed')
-        self._update_address_cb(node_address)
+        self._update_address_cb(self._address)
         self._grpc_server.start()
         logger.info(u'service servers run on %s', self._address)
 

@@ -25,6 +25,9 @@ class IServiceServer(object):
     def get_service_name(self):
         return self._service_name
 
+    def get_node_handle(self):
+        return self._node_handle
+
     @abc.abstractmethod
     def invoke(self, service_req):
         """
@@ -68,7 +71,7 @@ class ServiceServer(IServiceServer):
         """
 
         if hasattr(self._req_cls, u'ParseFromString'):
-            req = self._req_cls
+            req = self._req_cls()
             req.ParseFromString(service_req.request_data)
         else:
             req = service_req.request_data.decode('utf-8')

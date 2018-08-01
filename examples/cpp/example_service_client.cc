@@ -30,6 +30,7 @@ int main() {
         while (true) {
             zros_example::TestServiceRequest request;
             zros_example::TestServiceResponse response;
+            request.set_detail("hello world");
             while(client->get_ready()) {
                 auto status = client->call(&request, &response);
                 if (status.code() == status.OK) {

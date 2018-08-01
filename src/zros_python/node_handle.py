@@ -5,18 +5,26 @@ data: 2018-07-31
 author: pairs
 """
 
+import zros_python.service_server_manager as ssm
+import zros_python.service_server as service_server
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class NodeHandle(object):
     """
 
     """
-    def __init__(self, node_name):
+    def __init__(self, node_name, node_address=u'[::]:'):
         self._node_name = node_name
-        self._service_server_mgr = None
-        self._service_client_mgr = None
-        self._publisher_manager = None
-        self._subscriber_manager = None
-        self._node_address = None
+        self._node_address = node_address
+        self._service_server_mgr = ssm.ServiceServerManager(self._node_address, self.set_node_address)
+        # self._service_client_mgr = None
+        # self._publisher_manager = None
+        # self._subscriber_manager = None
+        # self._node_address = None
+        self.spin()
 
     def advertise_service(self, service_name, service_func, req_cls, res_cls):
         """
@@ -27,7 +35,13 @@ class NodeHandle(object):
         :param res_cls:
         :return:
         """
-        pass
+        server = service_server.ServiceServer(service_name, service_func, req_cls, res_cls, self)
+        ok = self._service_server_mgr.register_server(server)
+        if ok is False:
+            logging.error(u'advertise service %s failed ', service_name)
+            return None
+        else:
+            return server
 
     def service_client(self, service_name, req_cls, res_cls, client_info=""):
         """
@@ -60,7 +74,13 @@ class NodeHandle(object):
         pass
 
     def spin(self):
-        pass
+        self._service_server_mgr.start()
 
     def set_node_address(self, address):
         self._node_address = address
+
+    def get_node_address(self):
+        return self._node_address
+
+    def get_node_name(self):
+        return self._node_name
