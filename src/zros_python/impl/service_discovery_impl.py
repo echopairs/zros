@@ -65,7 +65,7 @@ class ServiceDiscoveryImpl(zpbg2.ServiceDiscoveryRPCServicer):
             if response.code == zpb2.Status.OK:
                 return True
             else:
-                logger.error(u'register service server %s failed %s ', request.service_name)
+                logger.error(u'register service server %s failed', request.service_name)
                 return False
         except Exception:
             logger.error(traceback.format_exc())
@@ -75,7 +75,25 @@ class ServiceDiscoveryImpl(zpbg2.ServiceDiscoveryRPCServicer):
         pass
 
     def add_service_client(self, client):
-        pass
+        timeout = self._STUB_CALL_SHORT_TIME_OUT
+        request = zpb2.ServiceClientInfo()
+        request.service_name = client.get_service_name()
+        request.physical_node_info.agent_address = self._agent_address
+        node_handle = client.get_node_handle()
+        node_name = node_handle.get_node_name()
+        node_address = node_handle.get_node_address()
+        request.physical_node_info.name = node_name
+        request.physical_node_info.real_address = node_address
+        try:
+            response = self._master_rpc_stub.RegisterServiceClient(request, timeout)
+            if response.code == zpb2.Status.Ok:
+                return True
+            else:
+                logger.error(u'register service client %s failed', request.service_name)
+                return False
+        except Exception:
+            logger.error((traceback.format_exc()))
+            return False
 
     def spin(self):
         self._grpc_server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

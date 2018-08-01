@@ -26,6 +26,18 @@ class ServiceDiscovery(object):
     def add_subscriber(self, subscriber):
         return self._impl.add_subscriber(subscriber)
 
+    def set_register_service_server_cb(self, callback):
+        return self._impl.set_register_service_server_cb(callback)
+
+    def set_unregister_service_server_cb(self, callback):
+        return self.set_unregister_service_server_cb(callback)
+
+    def set_register_publisher_cb(self, callback):
+        return self.set_register_publisher_cb(callback)
+
+    def set_unregister_publisher_cb(self, callback):
+        return self.set_unregister_publisher_cb(callback)
+
 
 if __name__ == '__main__':
     logging.basicConfig(format=u'[%(name)s - %(levelname)s]: %(message)s',
