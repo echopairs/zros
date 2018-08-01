@@ -19,8 +19,8 @@ class ServiceClientManager(object):
     def __init__(self):
         self._impl = impl.ServiceClientsImpl()
         self._gsd = zros.get_service_discovery()
-        self._gsd.set_register_service_server_cb = self._impl.register_service_client
-        self._gsd.set_unregister_service_server_cb = self._impl.unregister_service_client
+        self._gsd.set_register_service_server_cb(self._impl.register_service_client)
+        self._gsd.set_unregister_service_server_cb(self._impl.unregister_service_client)
 
     def register_client(self, client):
         self._impl.register_client(client)

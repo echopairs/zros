@@ -63,13 +63,13 @@ class ServiceClientsImpl(object):
 
     def register_client(self, client):
         service_name = client.get_service_name()
-        while self._clients_mutex:
+        with self._clients_mutex:
             if service_name in self._clients:
                 logger.warning(u'service client %s already register', service_name)
             else:
                 self._clients[service_name] = client
 
-    def unregister_service_client(self, service_name):
+    def unregister_client(self, service_name):
         # todo
         pass
 
@@ -83,7 +83,7 @@ class ServiceClientsImpl(object):
                 return response
 
         stub = self._get_rpc_stub(service_name)
-        if stub in None:
+        if stub is None:
             logger.warning(u'stub is None')
             response.status.code = zpb2.Status.NOT_FOUND
             response.status.details = u'service call stub not found, probably waiting for establishing yet.'
@@ -109,8 +109,11 @@ class ServiceClientsImpl(object):
             return status
 
     def unregister_service_client(self, server_info):
+        service_name = server_info.service_name
+        status = zpb2.Status()
+        logger.info(u'unregister service client %s ', service_name)
         # todo
-        pass
+        return status
 
     def _get_rpc_stub(self, service_name):
         with self._services_mutex:

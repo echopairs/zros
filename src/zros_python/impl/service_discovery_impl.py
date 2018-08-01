@@ -86,7 +86,7 @@ class ServiceDiscoveryImpl(zpbg2.ServiceDiscoveryRPCServicer):
         request.physical_node_info.real_address = node_address
         try:
             response = self._master_rpc_stub.RegisterServiceClient(request, timeout)
-            if response.code == zpb2.Status.Ok:
+            if response.code == zpb2.Status.OK:
                 return True
             else:
                 logger.error(u'register service client %s failed', request.service_name)
@@ -118,7 +118,7 @@ class ServiceDiscoveryImpl(zpbg2.ServiceDiscoveryRPCServicer):
         self._deal_register_publisher_cb = callback
 
     def set_unregister_publisher_cb(self, callback):
-        self._deal_unregister_service_server_cb = callback
+        self._deal_unregister_publisher_cb = callback
 
     def RegisterPublisher(self, request, context):
         if self._deal_register_publisher_cb:

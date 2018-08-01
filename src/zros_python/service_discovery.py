@@ -30,7 +30,7 @@ class ServiceDiscovery(object):
         return self._impl.set_register_service_server_cb(callback)
 
     def set_unregister_service_server_cb(self, callback):
-        return self.set_unregister_service_server_cb(callback)
+        return self._impl.set_unregister_service_server_cb(callback)
 
     def set_register_publisher_cb(self, callback):
         return self.set_register_publisher_cb(callback)

@@ -32,6 +32,9 @@ class IServiceClient(object):
     def set_ready(self, ready):
         self._ready = ready
 
+    def get_ready(self):
+        return self._ready
+
 
 class ServiceClient(IServiceClient):
     """
@@ -58,7 +61,7 @@ class ServiceClient(IServiceClient):
                 isinstance(res_cls(), unicode) or
                 isinstance(res_cls(), gpm.Message))
 
-    def call(self, request, timeout):
+    def call(self, request, timeout=None):
         """
 
         :param request:
@@ -67,12 +70,12 @@ class ServiceClient(IServiceClient):
         """
         assert (request is self._req_cls or isinstance(request, self._req_cls))
         if hasattr(request, u'SerializeToString'):
-            content = request.SerializeToString
+            content = request.SerializeToString()
         else:
             content = request.encode('utf-8')
 
         response = self._node_handle.call(self._service_name, content, self._client_info, timeout)
-        if response.status.code != zpb2.Status.Ok:
+        if response.status.code != zpb2.Status.OK:
             logger.error(u'call server %s failed, the reason is %', self.get_service_name(), response.status.details)
             return None
         else:
