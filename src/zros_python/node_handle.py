@@ -7,6 +7,8 @@ author: pairs
 
 import zros_python.service_server_manager as ssm
 import zros_python.service_client_manager as scm
+import zros_python.publisher_manager as pm
+import zros_python.subscriber_manager as sm
 import zros_python.service_client as service_client
 import zros_python.service_server as service_server
 import logging
@@ -23,8 +25,8 @@ class NodeHandle(object):
         self._node_address = node_address
         self._service_server_mgr = ssm.ServiceServerManager(self._node_address, self.set_node_address)
         self._service_client_mgr = scm.ServiceClientManager()
-        # self._publisher_manager = None
-        # self._subscriber_manager = None
+        self._publisher_manager = pm.PublisherManager()
+        self._subscriber_manager = sm.SubscriberManager()
         self.spin()
 
     def advertise_service(self, service_name, service_func, req_cls, res_cls):
@@ -85,7 +87,7 @@ class NodeHandle(object):
         """
         return self._service_client_mgr.call(service_name, content, cli_info, timeout)
 
-    def publish(self):
+    def publish(self, topic, content, timeout):
         pass
 
     def spin(self):
