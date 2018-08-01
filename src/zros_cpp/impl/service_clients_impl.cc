@@ -75,7 +75,7 @@ namespace zros {
             return nullptr;
         }
         // already ready
-        auto client = clients_[service_name];
+//        auto client = clients_[service_name];
         auto stub = get_rpc_stub(service_name);
         if (stub == nullptr) {
             SSPD_LOG_WARNING << "stub is nullptr ";

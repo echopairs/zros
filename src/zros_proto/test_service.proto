@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package zros_example;
+
+message TestServiceRequest {
+  int32 count = 1;
+  string detail = 2;
+}
+
+message TestServiceResponse {
+  string detail = 1;
+}
