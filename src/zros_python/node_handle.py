@@ -12,6 +12,7 @@ import zros_python.subscriber_manager as sm
 import zros_python.service_client as service_client
 import zros_python.service_server as service_server
 import zros_python.publisher as publisher
+import zros_python.subscriber as subscriber
 import logging
 
 logger = logging.getLogger(__name__)
@@ -82,7 +83,14 @@ class NodeHandle(object):
         :param message_cls:
         :return:
         """
-        pass
+        assert (isinstance(topic, unicode) and topic != u"")
+        sub = subscriber.Subscriber(topic, callback, message_cls, self)
+        ok = self._subscriber_manager.register_subscriber(sub)
+        if ok is False:
+            logger.error(u'advertise subscriber %s failed', topic)
+            return None
+        else:
+            return sub
 
     def call(self, service_name, content, cli_info, timeout):
         """

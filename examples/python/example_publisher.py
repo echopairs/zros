@@ -35,6 +35,7 @@ def publish():
     # 4. publish message
     message = tmpb2.TestMessage()
     message.detail = u'hello world'
+    message.count = 7
     while True:
         try:
             pub.publish(message)
