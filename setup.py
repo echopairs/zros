@@ -47,9 +47,9 @@ def generate_proto(source, output):
         sys.exit(-1)
 
 # 3. list of all .proto files
-proto_src = [('src/zros_proto/zros.proto', 'src/zros_python/zros/pb/'),
-             ('src/zros_proto/test_message.proto', 'src/zros_python/zros/pb/'),
-             ('src/zros_proto/test_service.proto', 'src/zros_python/zros/pb/')]
+proto_src = [('src/zros_proto/zros.proto', 'src/zros_python/pb/'),
+             ('src/zros_proto/test_message.proto', 'src/zros_python/pb/'),
+             ('src/zros_proto/test_service.proto', 'src/zros_python/pb/')]
 
 class build_py(_build_py):
     def run(self):
@@ -84,11 +84,10 @@ setup (
         'grpcio==1.0.0',
         'pyzmq==16.0.2',
     ],
-     packages=['zros',
-               'zros.pb',
-    #           'zros.client',
-    #           'zros.server'],
+     packages=['zros_python',
+               'zros_python.pb',
+              'zros_python.impl',
                ],
-    package_dir={'zros': 'src/zros_python/zros'},
+    package_dir={'zros_python': 'src/zros_python'},
     cmdclass={'clean':clean, 'build_py': build_py},
 )

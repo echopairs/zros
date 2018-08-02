@@ -10,3 +10,5 @@ build/
 bin/
 .deb
 .rpm
+dist/
+zros.egg-info/
