@@ -11,6 +11,7 @@ import zros_python.publisher_manager as pm
 import zros_python.subscriber_manager as sm
 import zros_python.service_client as service_client
 import zros_python.service_server as service_server
+import zros_python.publisher as publisher
 import logging
 
 logger = logging.getLogger(__name__)
@@ -64,7 +65,14 @@ class NodeHandle(object):
             return client
 
     def advertise(self, topic, message_cls):
-        pass
+        assert (isinstance(topic, unicode) and topic != u"")
+        pub = publisher.Publisher(topic, message_cls, self)
+        ok = self._publisher_manager.register_publisher(pub)
+        if ok is False:
+            logger.error(u'advertise publisher %s failed', topic)
+            return None
+        else:
+            return pub
 
     def subscribe(self, topic, callback, message_cls):
         """
@@ -88,7 +96,7 @@ class NodeHandle(object):
         return self._service_client_mgr.call(service_name, content, cli_info, timeout)
 
     def publish(self, topic, content, timeout):
-        pass
+        self._publisher_manager.publish(topic, content)
 
     def spin(self):
         self._service_server_mgr.start()
