@@ -7,10 +7,10 @@ author: pairs
 
 import zros_python.zros as zros
 import zros_python.node_handle as node
-import logging
 import zros_python.pb.test_service_pb2 as tspb2
 import time
 import traceback
+import logging
 
 logger = logging.getLogger(__name__)
 

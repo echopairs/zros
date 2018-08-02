@@ -19,7 +19,7 @@ int main() {
     // 3. create subscriber
     const std::string topic = "test_topic";
     auto sub = node_handle->subscribe<zros_example::TestMessage> (topic, [](const zros_example::TestMessage message) {
-        SSPD_LOG_INFO << "receive publish message " << message.detail();
+        SSPD_LOG_INFO << "receive publish message " << message.detail() << " " << message.count();
     });
 
     getchar();

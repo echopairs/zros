@@ -43,10 +43,37 @@ class ServiceDiscoveryImpl(zpbg2.ServiceDiscoveryRPCServicer):
             return False
 
     def add_publisher(self, publisher):
-        pass
+        timeout = self._STUB_CALL_SHORT_TIME_OUT
+        request = zpb2.PublisherInfo()
+        request.topic = publisher.get_topic()
+        request.physical_node_info.agent_address = self._agent_address
+        request.physical_node_info.real_address = publisher.get_address()
+        try:
+            response = self._master_rpc_stub.RegisterPublisher(request, timeout)
+            if response.code == zpb2.Status.OK:
+                return True
+            else:
+                logger.error(u'register publisher %s failed', request.topic)
+                return False
+        except Exception:
+            logger.error(u'register publisher %s failed', request.topic)
+            return False
 
     def add_subscriber(self, subscriber):
-        pass
+        timeout = self._STUB_CALL_SHORT_TIME_OUT
+        request = zpb2.SubscriberInfo()
+        request.topic = subscriber.get_topic()
+        request.physical_node_info.agent_address = self._agent_address
+        try:
+            response = self._master_rpc_stub.RegisterSubscriber(request, timeout)
+            if response.code == zpb2.Status.OK:
+                return True
+            else:
+                logger.error(u'register subscriber %s failed', request.topic)
+                return False
+        except Exception:
+            logger.error(u'register subscriber %s failed', request.topic)
+            return False
 
     def add_service_server(self, server):
         timeout = self._STUB_CALL_SHORT_TIME_OUT

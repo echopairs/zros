@@ -7,8 +7,12 @@ author: pairs
 
 import zros_python.service_server_manager as ssm
 import zros_python.service_client_manager as scm
+import zros_python.publisher_manager as pm
+import zros_python.subscriber_manager as sm
 import zros_python.service_client as service_client
 import zros_python.service_server as service_server
+import zros_python.publisher as publisher
+import zros_python.subscriber as subscriber
 import logging
 
 logger = logging.getLogger(__name__)
@@ -23,8 +27,8 @@ class NodeHandle(object):
         self._node_address = node_address
         self._service_server_mgr = ssm.ServiceServerManager(self._node_address, self.set_node_address)
         self._service_client_mgr = scm.ServiceClientManager()
-        # self._publisher_manager = None
-        # self._subscriber_manager = None
+        self._publisher_manager = pm.PublisherManager()
+        self._subscriber_manager = sm.SubscriberManager()
         self.spin()
 
     def advertise_service(self, service_name, service_func, req_cls, res_cls):
@@ -62,7 +66,14 @@ class NodeHandle(object):
             return client
 
     def advertise(self, topic, message_cls):
-        pass
+        assert (isinstance(topic, unicode) and topic != u"")
+        pub = publisher.Publisher(topic, message_cls, self)
+        ok = self._publisher_manager.register_publisher(pub)
+        if ok is False:
+            logger.error(u'advertise publisher %s failed', topic)
+            return None
+        else:
+            return pub
 
     def subscribe(self, topic, callback, message_cls):
         """
@@ -72,7 +83,14 @@ class NodeHandle(object):
         :param message_cls:
         :return:
         """
-        pass
+        assert (isinstance(topic, unicode) and topic != u"")
+        sub = subscriber.Subscriber(topic, callback, message_cls, self)
+        ok = self._subscriber_manager.register_subscriber(sub)
+        if ok is False:
+            logger.error(u'advertise subscriber %s failed', topic)
+            return None
+        else:
+            return sub
 
     def call(self, service_name, content, cli_info, timeout):
         """
@@ -85,8 +103,8 @@ class NodeHandle(object):
         """
         return self._service_client_mgr.call(service_name, content, cli_info, timeout)
 
-    def publish(self):
-        pass
+    def publish(self, topic, content, timeout):
+        self._publisher_manager.publish(topic, content)
 
     def spin(self):
         self._service_server_mgr.start()
